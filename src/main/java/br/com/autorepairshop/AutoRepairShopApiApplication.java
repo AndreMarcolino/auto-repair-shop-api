@@ -1,0 +1,13 @@
+package br.com.autorepairshop;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class AutoRepairShopApiApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(AutoRepairShopApiApplication.class, args);
+	}
+
+}
