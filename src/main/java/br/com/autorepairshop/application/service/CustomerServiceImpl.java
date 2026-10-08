@@ -1,14 +1,15 @@
 package br.com.autorepairshop.application.service;
 
-import br.com.autorepairshop.customer.Customer;
-import br.com.autorepairshop.customer.CustomerRepository;
-import br.com.autorepairshop.customer.dto.CreateCustomerRequest;
-import br.com.autorepairshop.customer.dto.CustomerResponse;
-import br.com.autorepairshop.customer.service.CustomerService;
+import java.util.Locale;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Locale;
+import br.com.autorepairshop.domain.entity.Customer;
+import br.com.autorepairshop.domain.repository.CustomerRepository;
+import br.com.autorepairshop.domain.service.CustomerService;
+import br.com.autorepairshop.dto.input.CustomerInput;
+import br.com.autorepairshop.dto.output.CustomerOutput;
 
 @Service
 @Transactional
@@ -21,7 +22,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerResponse create(CreateCustomerRequest request) {
+    public CustomerOutput create(CustomerInput request) {
         String name = request.name().trim();
         String cpf = normalize(request.cpf());
         String cnpj = normalizeCnpj(request.cnpj());
@@ -32,7 +33,7 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = new Customer(name, cpf, cnpj);
         Customer savedCustomer = customerRepository.save(customer);
 
-        return new CustomerResponse(
+        return new CustomerOutput(
                 savedCustomer.getId(),
                 savedCustomer.getName(),
                 savedCustomer.getCpf(),

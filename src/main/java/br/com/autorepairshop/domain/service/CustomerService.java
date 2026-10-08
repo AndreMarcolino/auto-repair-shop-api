@@ -1,9 +1,9 @@
 package br.com.autorepairshop.domain.service;
 
-import br.com.autorepairshop.customer.dto.CreateCustomerRequest;
-import br.com.autorepairshop.customer.dto.CustomerResponse;
+import br.com.autorepairshop.dto.input.CustomerInput;
+import br.com.autorepairshop.dto.output.CustomerOutput;
 
 public interface CustomerService {
 
-    CustomerResponse create(CreateCustomerRequest request);
+    CustomerOutput create(CustomerInput request);
 }
