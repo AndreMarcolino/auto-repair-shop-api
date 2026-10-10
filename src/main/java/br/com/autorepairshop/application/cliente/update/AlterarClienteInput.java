@@ -1,0 +1,10 @@
+package br.com.autorepairshop.application.cliente.update;
+
+public record AlterarClienteInput(
+		String id,
+        String nome,
+        Short tipoPessoa,
+        String cpfCnpj,
+        String telefone,
+        String email) {
+}
