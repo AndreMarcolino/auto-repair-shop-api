@@ -50,7 +50,7 @@ public class AlterarClienteService implements AlterarClienteUseCase {
         if (!cliente.get().getCpfCnpj().equals(cpfCnpj) 
         		&& clienteRepository.existeCpfCnpj(cpfCnpj)) {
 
-            throw new DomainException(DomainError.CPF_CNPJ_DUPLICADO);
+            throw new DomainException(DomainError.CPF_CNPJ_JA_CADASTRADO);
         }
 
        

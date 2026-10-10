@@ -1,0 +1,11 @@
+CREATE TABLE veiculos (
+    id UUID PRIMARY KEY,
+    placa VARCHAR(7) NOT NULL,
+    marca VARCHAR(100) NOT NULL,
+    modelo VARCHAR(100) NOT NULL,
+    ano_fabricacao INTEGER NOT NULL,
+    criado_em TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT uk_veiculos_placa UNIQUE (placa)
+);

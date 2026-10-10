@@ -29,7 +29,7 @@ public class CriarClienteService implements CriarClienteUseCase {
         var email = Email.criar(input.email());
                 
         if (clienteRepository.existeCpfCnpj(cpfCnpj)) {
-            throw new DomainException(DomainError.CPF_CNPJ_DUPLICADO);
+            throw new DomainException(DomainError.CPF_CNPJ_JA_CADASTRADO);
         }
 
         var cliente = Cliente.criar(input.nome(),cpfCnpj,input.telefone(),email);

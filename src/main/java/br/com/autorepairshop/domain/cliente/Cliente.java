@@ -79,7 +79,7 @@ public class Cliente {
 
 	public void desativar() {
 		if (!ativo) {
-			throw new DomainException(DomainError.CLIENTE_JA_DESATIVO);
+			throw new DomainException(DomainError.CLIENTE_JA_DESATIVADO);
 		}
 
 		ativo = false;

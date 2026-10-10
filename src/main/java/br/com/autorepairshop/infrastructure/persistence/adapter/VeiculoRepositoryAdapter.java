@@ -1,0 +1,32 @@
+package br.com.autorepairshop.infrastructure.persistence.adapter;
+
+import org.springframework.stereotype.Repository;
+
+import br.com.autorepairshop.domain.shared.valueobject.Placa;
+import br.com.autorepairshop.domain.veiculo.Veiculo;
+import br.com.autorepairshop.domain.veiculo.VeiculoRepository;
+import br.com.autorepairshop.infrastructure.persistence.entity.VeiculoEntity;
+import br.com.autorepairshop.infrastructure.persistence.repository.VeiculoJpaRepository;
+
+@Repository
+public class VeiculoRepositoryAdapter implements VeiculoRepository {
+
+    private final VeiculoJpaRepository jpaRepository;
+
+    public VeiculoRepositoryAdapter(VeiculoJpaRepository jpaRepository) {
+        this.jpaRepository = jpaRepository;
+    }
+
+    @Override
+    public Veiculo salvar(Veiculo veiculo) {
+        VeiculoEntity entidade = VeiculoEntity.fromDomain(veiculo);
+
+        VeiculoEntity salva = jpaRepository.save(entidade);
+
+        return salva.toDomain();
+    }
+    
+    public boolean existePlaca(Placa placa) {
+        return jpaRepository.existsByPlaca_Placa(placa.placa());
+    }
+}
