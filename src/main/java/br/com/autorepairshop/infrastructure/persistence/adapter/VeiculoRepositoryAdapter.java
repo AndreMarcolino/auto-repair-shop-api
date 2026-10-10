@@ -1,5 +1,8 @@
 package br.com.autorepairshop.infrastructure.persistence.adapter;
 
+import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.stereotype.Repository;
 
 import br.com.autorepairshop.domain.shared.valueobject.Placa;
@@ -29,4 +32,11 @@ public class VeiculoRepositoryAdapter implements VeiculoRepository {
     public boolean existePlaca(Placa placa) {
         return jpaRepository.existsByPlaca_Placa(placa.placa());
     }
+    
+    @Override
+    public Optional<Veiculo> buscarPorId(UUID id) {
+        return jpaRepository.findById(id)
+                .map(VeiculoEntity::toDomain);
+    }
+
 }

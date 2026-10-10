@@ -1,4 +1,4 @@
-package br.com.autorepairshop.domain.veiculo.create;
+package br.com.autorepairshop.application.veiculo.create;
 
 import java.util.UUID;
 

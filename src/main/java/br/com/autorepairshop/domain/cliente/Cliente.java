@@ -58,7 +58,7 @@ public class Cliente {
 	 
 	}
 
-	public Cliente alterar(String nome, CpfCnpj cpfCnpj, String telefone, Email email) {
+	public Cliente atualizarCadastro(String nome, CpfCnpj cpfCnpj, String telefone, Email email) {
 
 		if (cpfCnpj == null) {
 			throw new DomainException(DomainError.CPF_CNPJ_INVALIDO);

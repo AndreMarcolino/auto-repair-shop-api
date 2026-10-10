@@ -1,4 +1,4 @@
-package br.com.autorepairshop.domain.veiculo.create;
+package br.com.autorepairshop.application.veiculo.create;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

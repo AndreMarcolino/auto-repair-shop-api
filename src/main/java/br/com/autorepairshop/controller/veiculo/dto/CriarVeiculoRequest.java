@@ -1,6 +1,6 @@
 package br.com.autorepairshop.controller.veiculo.dto;
 
-import br.com.autorepairshop.domain.veiculo.create.CriarVeiculoInput;
+import br.com.autorepairshop.application.veiculo.create.CriarVeiculoInput;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 

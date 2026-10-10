@@ -54,7 +54,7 @@ public class AlterarClienteService implements AlterarClienteUseCase {
         }
 
        
-        cliente.get().alterar(
+        cliente.get().atualizarCadastro(
                 input.nome(),
                 cpfCnpj,
                 input.telefone(),

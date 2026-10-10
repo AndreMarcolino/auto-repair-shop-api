@@ -55,7 +55,7 @@ public class Veiculo {
         );
     }
 
-    public void atualizar(
+    public void atualizarCadastro(
             Placa placa,
             String marca,
             String modelo,
