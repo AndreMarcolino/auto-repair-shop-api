@@ -3,6 +3,8 @@ package br.com.autorepairshop.infrastructure.persistence.adapter;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import br.com.autorepairshop.domain.shared.valueobject.Placa;
@@ -37,6 +39,24 @@ public class VeiculoRepositoryAdapter implements VeiculoRepository {
     public Optional<Veiculo> buscarPorId(UUID id) {
         return jpaRepository.findById(id)
                 .map(VeiculoEntity::toDomain);
+    }
+    
+    @Override
+    public Page<Veiculo> buscar(
+            String placa,
+            String marca,
+            String modelo,
+            Integer anoFabricacao,
+            Pageable pageable) {
+
+        return jpaRepository.buscar(
+                placa,
+                marca,
+                modelo,
+                anoFabricacao,
+                pageable
+            )
+            .map(VeiculoEntity::toDomain);
     }
 
 }
