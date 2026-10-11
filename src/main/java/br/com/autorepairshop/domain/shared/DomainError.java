@@ -18,7 +18,12 @@ public enum DomainError {
 	ANO_FABRICACAO_INVALIDO("DOM-014","Ano fabricação veículo inválido"),
 	PLACA_VEICULO_JA_CADASTRADA("DOM-015","Placa já cadastrada"),
 	ID_VEICULO_INVALIDO("DOM-016", "Código do Veículo inválido"),
-	VEICULO_NAO_ENCONTRADO("DOM-017","Veículo não encontrado");
+	VEICULO_NAO_ENCONTRADO("DOM-017","Veículo não encontrado"),
+	DESCRICAO_PECA_OBRIGATORIA("DOM-018","Descrição da peça obrigatória"),
+	VALOR_REFERENCIA_PECA_INVALIDO("DOM-019","Valor peça inválido"),
+	QUANTIDADE_ESTOQUE_INVALIDA("DOM-020","Quantidade estoque inválida"),
+	DESCRICAO_SERVICO_OBRIGATORIA("DOM-21","Descrição do serviço obrigatória"),
+	VALOR_REFERENCIA_SERVICO_INVALIDO("DOM-22","Valor peça inválido");
 	
     private final String codigo;
     private final String mensagem;
