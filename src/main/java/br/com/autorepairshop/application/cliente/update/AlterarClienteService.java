@@ -33,7 +33,7 @@ public class AlterarClienteService implements AlterarClienteUseCase {
     	try {
     	    id = UUID.fromString(input.id());
     	} catch (IllegalArgumentException | NullPointerException exception) {
-    		throw new DomainException(DomainError.CLIENTE_ID_INVALIDO);
+    		throw new DomainException(DomainError.ID_CLIENTE_INVALIDO);
     	}
 
         var tipoPessoa = TipoPessoa.deCodigo(input.tipoPessoa());

@@ -31,7 +31,7 @@ public class DesativarClienteService implements DesativarClienteUseCase {
     	try {
     	    id = UUID.fromString(idCliente);
     	} catch (IllegalArgumentException | NullPointerException exception) {
-    		throw new DomainException(DomainError.CLIENTE_ID_INVALIDO);
+    		throw new DomainException(DomainError.ID_CLIENTE_INVALIDO);
     	}
 
         

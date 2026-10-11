@@ -1,4 +1,4 @@
-package br.com.autorepairshop.application.veiculo.lista;
+package br.com.autorepairshop.application.veiculo.list;
 
 import java.util.List;
 

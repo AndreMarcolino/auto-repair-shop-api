@@ -58,5 +58,9 @@ public class VeiculoRepositoryAdapter implements VeiculoRepository {
             )
             .map(VeiculoEntity::toDomain);
     }
+    
+    public void excluir(UUID id) {
+        jpaRepository.deleteById(id);
+    }
 
 }

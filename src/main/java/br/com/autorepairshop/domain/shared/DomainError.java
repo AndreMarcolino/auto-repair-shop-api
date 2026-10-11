@@ -9,7 +9,7 @@ public enum DomainError {
 	EMAIL_INVALIDO("DOM-005","Email inválido"),
 	NOME_CLIENTE_INVALIDO("DOM-006","Nome do cliente obrigatório"),
 	CLIENTE_NAO_ENCONTRADO("DOM-007","Cliente não encontrado"),
-	CLIENTE_ID_INVALIDO("DOM-008", "Código do Cliente inválido"),
+	ID_CLIENTE_INVALIDO("DOM-008", "Código do Cliente inválido"),
 	CLIENTE_JA_DESATIVADO("DOM-009", "Cliente já está desativado"),
 	TIPO_PESSOA_OBRIGATORIO_PARA_CPF_CNPJ("DOM-010", "Tipo pessoal obrigatório para CPF/CNPJ"),
 	PLACA_INVALIDA("DOM-011", "Placa veículo inválida"),
@@ -19,7 +19,7 @@ public enum DomainError {
 	PLACA_VEICULO_JA_CADASTRADA("DOM-015","Placa já cadastrada"),
 	ID_VEICULO_INVALIDO("DOM-016", "Código do Veículo inválido"),
 	VEICULO_NAO_ENCONTRADO("DOM-017","Veículo não encontrado");
-
+	
     private final String codigo;
     private final String mensagem;
 

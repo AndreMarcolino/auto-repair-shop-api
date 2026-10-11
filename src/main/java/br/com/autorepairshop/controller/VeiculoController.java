@@ -1,6 +1,7 @@
 package br.com.autorepairshop.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -11,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.autorepairshop.application.veiculo.create.CriarVeiculoUseCase;
-import br.com.autorepairshop.application.veiculo.lista.ListarVeiculosUseCase;
+import br.com.autorepairshop.application.veiculo.delete.ExcluirVeiculoUseCase;
+import br.com.autorepairshop.application.veiculo.list.ListarVeiculosUseCase;
 import br.com.autorepairshop.application.veiculo.update.AlterarVeiculoUseCase;
 import br.com.autorepairshop.controller.veiculo.dto.AlterarVeiculoRequest;
 import br.com.autorepairshop.controller.veiculo.dto.CriarVeiculoRequest;
@@ -29,13 +31,18 @@ public class VeiculoController {
     
     private final ListarVeiculosUseCase listarVeiculosUseCase;
     
+    private final ExcluirVeiculoUseCase excluirVeiculoUseCase;
+    
     public VeiculoController(CriarVeiculoUseCase criarVeiculoUseCase,
     		AlterarVeiculoUseCase alterarVeiculoUseCase,
-    		ListarVeiculosUseCase listarVeiculosUseCase)
+    		ListarVeiculosUseCase listarVeiculosUseCase,
+    		ExcluirVeiculoUseCase excluirVeiculoUseCase)
     {
         this.criarVeiculoUseCase = criarVeiculoUseCase;
         this.alterarVeiculoUseCase = alterarVeiculoUseCase;
         this.listarVeiculosUseCase = listarVeiculosUseCase;
+        this.excluirVeiculoUseCase = excluirVeiculoUseCase;
+        
         }
 
     @PostMapping
@@ -67,5 +74,11 @@ public class VeiculoController {
         var response = ListarVeiculosResponse.paraResponse(listaVeiculosOutput);
 
         return ResponseEntity.ok(response);
+    }
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> excluir(@PathVariable String id) {
+        excluirVeiculoUseCase.executar(id);
+        return ResponseEntity.noContent().build();
     }
 }

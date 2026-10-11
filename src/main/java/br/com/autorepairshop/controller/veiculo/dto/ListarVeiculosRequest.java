@@ -1,7 +1,7 @@
 
 package br.com.autorepairshop.controller.veiculo.dto;
 
-import br.com.autorepairshop.application.veiculo.lista.ListarVeiculosInput;
+import br.com.autorepairshop.application.veiculo.list.ListarVeiculosInput;
 
 public record ListarVeiculosRequest(
         String placa,

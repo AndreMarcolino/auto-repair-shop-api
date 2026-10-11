@@ -1,4 +1,4 @@
-package br.com.autorepairshop.application.cliente.lista;
+package br.com.autorepairshop.application.cliente.list;
 
 public record ListarClientesInput(
 	    String nome,

@@ -5,7 +5,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
-import br.com.autorepairshop.application.veiculo.lista.ListarVeiculosOutput;
+import br.com.autorepairshop.application.veiculo.list.ListarVeiculosOutput;
 import br.com.autorepairshop.application.veiculo.shared.VeiculoOutput;
 
 public record ListarVeiculosResponse(

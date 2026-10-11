@@ -20,4 +20,5 @@ public interface VeiculoRepository {
     	    Integer anoFabricacao,
     	    Pageable pageable
     	);
+    void excluir(UUID id);
 }

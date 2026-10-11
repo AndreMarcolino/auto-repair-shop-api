@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.autorepairshop.application.cliente.buscaclientecpfcnpj.BuscarClientePorCpfCnpjUseCase;
 import br.com.autorepairshop.application.cliente.create.CriarClienteUseCase;
 import br.com.autorepairshop.application.cliente.desativacliente.DesativarClienteUseCase;
-import br.com.autorepairshop.application.cliente.lista.ListarClientesUseCase;
+import br.com.autorepairshop.application.cliente.list.ListarClientesUseCase;
 import br.com.autorepairshop.application.cliente.update.AlterarClienteUseCase;
 import br.com.autorepairshop.controller.cliente.dto.AlterarClienteRequest;
 import br.com.autorepairshop.controller.cliente.dto.ClienteResponse;

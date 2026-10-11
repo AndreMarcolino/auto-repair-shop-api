@@ -1,6 +1,6 @@
 package br.com.autorepairshop.controller.cliente.dto;
 
-import br.com.autorepairshop.application.cliente.lista.ListarClientesInput;
+import br.com.autorepairshop.application.cliente.list.ListarClientesInput;
 
 public record ListarClientesRequest(
 	    String nome,

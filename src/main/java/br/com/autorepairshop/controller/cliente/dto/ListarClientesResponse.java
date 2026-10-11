@@ -2,7 +2,7 @@ package br.com.autorepairshop.controller.cliente.dto;
 
 import java.util.List;
 
-import br.com.autorepairshop.application.cliente.lista.ListarClientesOutput;
+import br.com.autorepairshop.application.cliente.list.ListarClientesOutput;
 
 public record ListarClientesResponse(
 	    List<ClienteResponse> clientes,

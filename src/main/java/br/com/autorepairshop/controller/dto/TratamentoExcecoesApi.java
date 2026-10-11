@@ -6,6 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -40,6 +41,6 @@ public class TratamentoExcecoesApi {
             ))
             .toList();
 
-        return ResponseEntity.badRequest().body(erros);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(erros);
     }
 }
