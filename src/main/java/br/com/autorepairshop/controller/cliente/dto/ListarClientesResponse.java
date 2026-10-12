@@ -3,21 +3,21 @@ package br.com.autorepairshop.controller.cliente.dto;
 import java.util.List;
 
 import br.com.autorepairshop.application.cliente.listar.ListarClientesOutput;
-import br.com.autorepairshop.controller.dto.PaginacaoResponse;
+import br.com.autorepairshop.controller.shared.dto.PaginacaoResponse;
 
 public record ListarClientesResponse(
 	    List<ClienteResponse> clientes,
-	    PaginacaoResponse paginacaoResponse
+	    PaginacaoResponse paginacao
 	) {
 	
-	public static ListarClientesResponse paraResponse(
+	public static ListarClientesResponse toResponse(
 	        ListarClientesOutput output) {
 
 	    return new ListarClientesResponse(
 	        output.clientes().stream()
-	            .map(ClienteResponse::paraResponse)
+	            .map(ClienteResponse::toResponse)
 	            .toList(),
-	            PaginacaoResponse.paraResponse(output.paginacao())
+	            PaginacaoResponse.toResponse(output.paginacao())
 	    );
 	}
 }

@@ -17,7 +17,7 @@ public record CriarVeiculoRequest(
 	    @NotNull
 	    Integer anoFabricacao
 	) {
-	    public CriarVeiculoInput paraInput() {
+	    public CriarVeiculoInput toInput() {
 	        return new CriarVeiculoInput(
 	            placa,
 	            marca,

@@ -9,7 +9,7 @@ public record AlterarVeiculoRequest(
     Integer anoFabricacao
 ) {
 
-    public AlterarVeiculoInput paraInput(String id) {
+    public AlterarVeiculoInput toInput(String id) {
         return new AlterarVeiculoInput(
             id,
             placa,

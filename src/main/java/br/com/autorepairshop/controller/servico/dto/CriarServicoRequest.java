@@ -8,7 +8,7 @@ public record CriarServicoRequest(
         String descricao,
         BigDecimal valorReferencia
 ) {
-    public CriarServicoInput paraInput() {
+    public CriarServicoInput toInput() {
         return new CriarServicoInput(descricao, valorReferencia);
     }
 }

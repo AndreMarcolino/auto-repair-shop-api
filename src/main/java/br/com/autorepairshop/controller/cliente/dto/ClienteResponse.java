@@ -12,7 +12,7 @@ public record ClienteResponse(
 	    boolean ativo
 	) {
 	
-	public static ClienteResponse paraResponse(ClienteOutput output) {
+	public static ClienteResponse toResponse(ClienteOutput output) {
         if (output == null) {
             return null;
         }

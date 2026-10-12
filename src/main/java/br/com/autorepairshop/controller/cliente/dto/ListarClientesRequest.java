@@ -13,7 +13,7 @@ public record ListarClientesRequest(
         int tamanho
 	) {
 	
-	 public ListarClientesInput paraInput() {
+	 public ListarClientesInput toInput() {
 	        return new ListarClientesInput(
 	            nome,
 	            tipoPessoa,

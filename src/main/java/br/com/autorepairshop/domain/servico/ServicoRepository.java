@@ -17,5 +17,6 @@ public interface ServicoRepository {
     	    BigDecimal valorReferencia,
     	    Paginacao paginacao
     	);
+   
     
 }

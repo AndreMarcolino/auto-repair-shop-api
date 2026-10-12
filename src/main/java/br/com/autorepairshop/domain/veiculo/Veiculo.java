@@ -28,10 +28,10 @@ public class Veiculo {
             Instant atualizadoEm) {
 
         this.id = id;
-        this.placa = validarPlaca(placa);
-        this.marca = validarMarca(marca);
-        this.modelo = validarModelo(modelo);
-        this.anoFabricacao = validarAnoFabricacao(anoFabricacao);
+        this.placa = placa;
+        this.marca = marca;
+        this.modelo = modelo;
+        this.anoFabricacao = anoFabricacao;
         this.criadoEm = criadoEm;
         this.atualizadoEm = atualizadoEm;
     }
@@ -42,6 +42,10 @@ public class Veiculo {
             String modelo,
             Integer anoFabricacao) {
 
+    	validarPlaca(placa);
+        validarMarca(marca);
+        validarModelo(modelo);
+        validarAnoFabricacao(anoFabricacao);
         Instant agora = Instant.now();
 
         return new Veiculo(

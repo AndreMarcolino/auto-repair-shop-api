@@ -43,7 +43,7 @@ public class ClienteEntity {
     protected ClienteEntity() {
     }
 
-    public static ClienteEntity paraEntity(Cliente cliente) {
+    public static ClienteEntity toEntity(Cliente cliente) {
         ClienteEntity entity = new ClienteEntity();
 
         entity.id = cliente.getId();
@@ -92,7 +92,7 @@ public class ClienteEntity {
         return atualizadoEm;
     }
 
-    public Cliente paraDominio() {
+    public Cliente toDomain() {
         return Cliente.reconstituir(
                 id,
                 nome,

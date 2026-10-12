@@ -11,7 +11,7 @@ public record ListarServicosRequest(
         int pagina,
         int tamanho
 ) {
-    public ListarServicosInput paraInput() {
+    public ListarServicosInput toInput() {
         return new ListarServicosInput(
                 descricao,
                 valorReferencia

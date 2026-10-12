@@ -37,14 +37,14 @@ class ClienteRepositoryAdapter implements ClienteRepository {
 
     @Override
     public void salvar(Cliente cliente) {
-        ClienteEntity entity = ClienteEntity.paraEntity(cliente);
+        ClienteEntity entity = ClienteEntity.toEntity(cliente);
         jpaRepository.save(entity);
     }
 
     @Override
     public Optional<Cliente> buscarPorId(UUID id) {
         return jpaRepository.findById(id)
-                .map(ClienteEntity::paraDominio);
+                .map(ClienteEntity::toDomain);
     }
 
 	@Override
@@ -56,7 +56,7 @@ class ClienteRepositoryAdapter implements ClienteRepository {
 		
 		List<Cliente> clientes = page.getContent()
 		            .stream()
-		            .map(ClienteEntity::paraDominio)
+		            .map(ClienteEntity::toDomain)
 		            .toList();
 
 		  
@@ -76,7 +76,7 @@ class ClienteRepositoryAdapter implements ClienteRepository {
 		            cpfCnpj.tipoPessoa().getCodigo(),
 		            cpfCnpj.cpfCnpj()
 		        ).
-		        map(ClienteEntity::paraDominio);
+		        map(ClienteEntity::toDomain);
 		}
 
 	

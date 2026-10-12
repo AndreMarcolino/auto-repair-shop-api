@@ -32,7 +32,7 @@ public class ServicoEntity {
     protected ServicoEntity() {
     }
 
-    public static ServicoEntity paraEntity(Servico servico) {
+    public static ServicoEntity toEntity(Servico servico) {
         ServicoEntity entity = new ServicoEntity();
         entity.id = servico.getId();
         entity.descricao = servico.getDescricao();
@@ -42,7 +42,7 @@ public class ServicoEntity {
         return entity;
     }
 
-    public Servico paraDominio() {
+    public Servico toDomain() {
         return Servico.reconstituir(
                 id,
                 descricao,

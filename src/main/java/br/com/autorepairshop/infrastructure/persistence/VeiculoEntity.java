@@ -48,7 +48,7 @@ public class VeiculoEntity {
     protected VeiculoEntity() {
     }
 
-    public static VeiculoEntity paraEntity(Veiculo veiculo) {
+    public static VeiculoEntity toEntity(Veiculo veiculo) {
         VeiculoEntity entidade = new VeiculoEntity();
 
         entidade.id = veiculo.getId();
@@ -62,7 +62,7 @@ public class VeiculoEntity {
         return entidade;
     }
 
-    public Veiculo paraDominio() {
+    public Veiculo toDomain() {
         return Veiculo.reconstituir(
             id,
             Placa.criar(placa.getPlaca()),

@@ -25,7 +25,7 @@ public class ListarServicosService implements ListarServicosUseCase {
     @Transactional(readOnly = true)
     public ListarServicosOutput executar(ListarServicosInput input, PaginacaoInput paginacaoInput) {
 
-        Pagina<Servico> resultado = servicoRepository.buscar(input.descricao(),input.valorReferencia(),paginacaoInput.paraPagina());
+        Pagina<Servico> resultado = servicoRepository.buscar(input.descricao(),input.valorReferencia(),paginacaoInput.toPaginacao());
 
         List<ServicoOutput> servicos = resultado.itens().stream()
             .map(ServicoOutput::fromDomain)

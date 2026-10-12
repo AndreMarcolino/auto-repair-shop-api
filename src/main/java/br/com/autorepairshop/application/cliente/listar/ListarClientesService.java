@@ -18,47 +18,34 @@ import br.com.autorepairshop.domain.shared.valueobject.TipoPessoa;
 @Service
 public class ListarClientesService implements ListarClientesUseCase {
 
-    private final ClienteRepository clienteRepository;
+	private final ClienteRepository clienteRepository;
 
-    public ListarClientesService(ClienteRepository clienteRepository) {
-        this.clienteRepository = clienteRepository;
-    }
+	public ListarClientesService(ClienteRepository clienteRepository) {
+		this.clienteRepository = clienteRepository;
+	}
 
-    public ListarClientesOutput executar(ListarClientesInput input, PaginacaoInput paginacaoInput) {
-        
-        Optional<TipoPessoa> tipoPessoa = Optional.ofNullable(null);
-        Optional<Email> email = Optional.ofNullable(null);
-        
-        if(input.tipoPessoa() != null) {
-        	tipoPessoa = Optional.ofNullable(TipoPessoa.deCodigo(input.tipoPessoa()));	
-        }
-        
-        Optional<CpfCnpj> cpfCnpj = tipoPessoa
-        	    .map(tipo -> CpfCnpj.criar(tipo, input.cpfCnpj()));
-        
-        
-        if(input.email() != null && !input.email().isBlank()) {
-        	email = Optional.ofNullable(Email.criar(input.email())); 
-        }
-        
-      
-        Pagina<Cliente> resultado = clienteRepository.buscar(
-            input.nome(),
-            tipoPessoa.map(TipoPessoa::getCodigo).orElse(null),
-            cpfCnpj.map(CpfCnpj::cpfCnpj).orElse(null),
-            email.map(Email::email).orElse(null),
-            input.telefone(),
-            input.ativo(),
-            paginacaoInput.paraPagina()
-        );
+	public ListarClientesOutput executar(ListarClientesInput input, PaginacaoInput paginacaoInput) {
 
-        List<ClienteOutput> clientes = resultado.
-        		itens().
-        		stream()
-        	    .map(ClienteOutput::fromDomain)
-        	    .toList();
-        	
-        return new ListarClientesOutput(clientes, PaginacaoOutput.de(resultado));
-            
-    }
+		Optional<TipoPessoa> tipoPessoa = Optional.ofNullable(null);
+		Optional<Email> email = Optional.ofNullable(null);
+
+		if (input.tipoPessoa() != null) {
+			tipoPessoa = Optional.ofNullable(TipoPessoa.deCodigo(input.tipoPessoa()));
+		}
+
+		Optional<CpfCnpj> cpfCnpj = tipoPessoa.map(tipo -> CpfCnpj.criar(tipo, input.cpfCnpj()));
+
+		if (input.email() != null && !input.email().isBlank()) {
+			email = Optional.ofNullable(Email.criar(input.email()));
+		}
+
+		Pagina<Cliente> resultado = clienteRepository.buscar(input.nome(),
+				tipoPessoa.map(TipoPessoa::getCodigo).orElse(null), cpfCnpj.map(CpfCnpj::cpfCnpj).orElse(null),
+				email.map(Email::email).orElse(null), input.telefone(), input.ativo(), paginacaoInput.toPaginacao());
+
+		List<ClienteOutput> clientes = resultado.itens().stream().map(ClienteOutput::fromDomain).toList();
+
+		return new ListarClientesOutput(clientes, PaginacaoOutput.de(resultado));
+
+	}
 }

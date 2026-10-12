@@ -9,7 +9,7 @@ public record CriarClienteRequest(
 	    String telefone,
 	    String email
 	) {
-	    public CriarClienteInput paraInput() {
+	    public CriarClienteInput toInput() {
 	        return new CriarClienteInput(
 	            nome,
 	            tipoPessoa,

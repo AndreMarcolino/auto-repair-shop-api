@@ -13,7 +13,6 @@ import br.com.autorepairshop.domain.servico.Servico;
 import br.com.autorepairshop.domain.servico.ServicoRepository;
 import br.com.autorepairshop.domain.shared.Pagina;
 import br.com.autorepairshop.domain.shared.Paginacao;
-import br.com.autorepairshop.infrastructure.persistence.ClienteEntity;
 import br.com.autorepairshop.infrastructure.persistence.ServicoEntity;
 import br.com.autorepairshop.infrastructure.repository.ServicoJpaRepository;
 
@@ -28,15 +27,15 @@ public class ServicoRepositoryAdapter implements ServicoRepository {
 
     @Override
     public Servico salvar(Servico servico) {
-        ServicoEntity entity = ServicoEntity.paraEntity(servico);
+        ServicoEntity entity = ServicoEntity.toEntity(servico);
         ServicoEntity salvo = jpaRepository.save(entity);
-        return salvo.paraDominio();
+        return salvo.toDomain();
     }
 
     @Override
     public Optional<Servico> buscarPorId(UUID id) {
         return jpaRepository.findById(id)
-                .map(ServicoEntity::paraDominio);
+                .map(ServicoEntity::toDomain);
     }
     
     public void excluir(UUID id) {
@@ -56,7 +55,7 @@ public class ServicoRepositoryAdapter implements ServicoRepository {
 		
 		var servicos = page.getContent()
 	            .stream()
-	            .map(ServicoEntity::paraDominio)
+	            .map(ServicoEntity::toDomain)
 	            .toList();
 		
 		return new Pagina<Servico>(

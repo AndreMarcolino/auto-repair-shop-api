@@ -6,7 +6,7 @@ public record PaginacaoInput(
         int pagina,
         int tamanho) {
 
-    public Paginacao paraPagina() {
+    public Paginacao toPaginacao() {
         return new Paginacao(pagina, tamanho);
     }
 }

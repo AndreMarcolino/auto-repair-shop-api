@@ -29,11 +29,11 @@ public class VeiculoRepositoryAdapter implements VeiculoRepository {
 
 	@Override
 	public Veiculo salvar(Veiculo veiculo) {
-		VeiculoEntity entidade = VeiculoEntity.paraEntity(veiculo);
+		VeiculoEntity entidade = VeiculoEntity.toEntity(veiculo);
 
 		VeiculoEntity salva = jpaRepository.save(entidade);
 
-		return salva.paraDominio();
+		return salva.toDomain();
 	}
 
 	public boolean existePlaca(Placa placa) {
@@ -42,7 +42,7 @@ public class VeiculoRepositoryAdapter implements VeiculoRepository {
 
 	@Override
 	public Optional<Veiculo> buscarPorId(UUID id) {
-		return jpaRepository.findById(id).map(VeiculoEntity::paraDominio);
+		return jpaRepository.findById(id).map(VeiculoEntity::toDomain);
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class VeiculoRepositoryAdapter implements VeiculoRepository {
 		
 		var veiculos = page.getContent()
 	            .stream()
-	            .map(VeiculoEntity::paraDominio)
+	            .map(VeiculoEntity::toDomain)
 	            .toList();
 	 return new Pagina<Veiculo>(
 			 veiculos,

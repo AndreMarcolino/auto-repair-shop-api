@@ -41,7 +41,7 @@ public class ListarVeiculosService implements ListarVeiculosUseCase {
             input.marca(),
             input.modelo(),
             input.anoFabricacao(),
-            paginacao.paraPagina()
+            paginacao.toPaginacao()
         );
 
         List<VeiculoOutput> veiculos = resultado.itens().stream()

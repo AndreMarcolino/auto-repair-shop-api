@@ -11,7 +11,7 @@ public record ListarVeiculosRequest(
         int pagina,
         int tamanho
 ) {
-    public ListarVeiculosInput paraInput() {
+    public ListarVeiculosInput toInput() {
         return new ListarVeiculosInput(
                 placa,
                 marca,

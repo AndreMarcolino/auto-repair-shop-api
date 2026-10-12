@@ -22,15 +22,17 @@ public class Servico {
             Instant criadoEm,
             Instant atualizadoEm) {
         this.id = validarId(id);
-        this.descricao = validarDescricao(descricao);
-        this.valorReferencia = validarValorReferencia(valorReferencia);
+        this.descricao = descricao;
+        this.valorReferencia = valorReferencia;
         this.criadoEm = criadoEm;
         this.atualizadoEm = atualizadoEm;
     }
 
     public static Servico criar(String descricao, BigDecimal valorReferencia) {
         Instant agora = Instant.now();
-
+        validarDescricao(descricao);
+        validarValorReferencia(valorReferencia);
+        
         return new Servico(
                 UUID.randomUUID(),
                 descricao,

@@ -9,7 +9,7 @@ public record AlterarServicoRequest(
     BigDecimal valorReferencia
 ) {
 
-    public AlterarServicoInput paraInput(String id) {
+    public AlterarServicoInput toInput(String id) {
         return new AlterarServicoInput(
             id,
             descricao,

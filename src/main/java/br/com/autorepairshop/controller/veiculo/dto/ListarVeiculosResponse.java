@@ -7,23 +7,23 @@ import java.util.UUID;
 
 import br.com.autorepairshop.application.veiculo.listar.ListarVeiculosOutput;
 import br.com.autorepairshop.application.veiculo.shared.VeiculoOutput;
-import br.com.autorepairshop.controller.dto.PaginacaoResponse;
+import br.com.autorepairshop.controller.shared.dto.PaginacaoResponse;
 
 public record ListarVeiculosResponse(
         List<VeiculoItemResponse> veiculos,
         PaginacaoResponse paginacao
 ) {
-    public static ListarVeiculosResponse paraResponse(
+    public static ListarVeiculosResponse toResponse(
             ListarVeiculosOutput output
     ) {
         List<VeiculoItemResponse> veiculos = output.veiculos()
                 .stream()
-                .map(VeiculoItemResponse::paraResponse)
+                .map(VeiculoItemResponse::toResponse)
                 .toList();
 
         return new ListarVeiculosResponse(
                 veiculos,
-                PaginacaoResponse.paraResponse(output.paginacao())
+                PaginacaoResponse.toResponse(output.paginacao())
         );
     }
 
@@ -36,7 +36,7 @@ public record ListarVeiculosResponse(
             Instant criadoEm,
             Instant atualizadoEm
     ) {
-        public static VeiculoItemResponse paraResponse(VeiculoOutput output) {
+        public static VeiculoItemResponse toResponse(VeiculoOutput output) {
             return new VeiculoItemResponse(
                     output.id(),
                     output.placa(),

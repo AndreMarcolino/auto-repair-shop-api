@@ -10,7 +10,7 @@ public record AlterarClienteRequest(
 	    String email
 	) {
 	
-	public AlterarClienteInput paraInput(String id) {
+	public AlterarClienteInput toInput(String id) {
         return new AlterarClienteInput(
             id,
             nome,

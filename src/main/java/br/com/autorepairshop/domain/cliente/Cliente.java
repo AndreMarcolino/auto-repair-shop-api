@@ -26,8 +26,8 @@ public class Cliente {
 			LocalDateTime criadoEm, LocalDateTime atualizadoEm) {
 
 		this.id = Objects.requireNonNull(id);
-		this.nome = Objects.requireNonNull(nome);
-		this.cpfCnpj = Objects.requireNonNull(cpfCnpj);
+		this.nome = nome;
+		this.cpfCnpj = cpfCnpj;
 		this.telefone = telefone;
 		this.email = email;
 		this.ativo = ativo;
@@ -60,6 +60,10 @@ public class Cliente {
 
 	public Cliente atualizarCadastro(String nome, CpfCnpj cpfCnpj, String telefone, Email email) {
 
+		if (NOME_INVALIDO.test(nome)) {
+			throw new DomainException(DomainError.NOME_CLIENTE_INVALIDO);
+		}
+		
 		if (cpfCnpj == null) {
 			throw new DomainException(DomainError.CPF_CNPJ_INVALIDO);
 		}
