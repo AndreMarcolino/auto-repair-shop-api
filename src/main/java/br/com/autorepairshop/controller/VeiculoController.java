@@ -11,16 +11,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.autorepairshop.application.veiculo.create.CriarVeiculoUseCase;
-import br.com.autorepairshop.application.veiculo.delete.ExcluirVeiculoUseCase;
-import br.com.autorepairshop.application.veiculo.list.ListarVeiculosUseCase;
-import br.com.autorepairshop.application.veiculo.update.AlterarVeiculoUseCase;
+import br.com.autorepairshop.application.shared.dto.PaginacaoInput;
+import br.com.autorepairshop.application.veiculo.alterar.AlterarVeiculoUseCase;
+import br.com.autorepairshop.application.veiculo.criar.CriarVeiculoUseCase;
+import br.com.autorepairshop.application.veiculo.excluir.ExcluirVeiculoUseCase;
+import br.com.autorepairshop.application.veiculo.listar.ListarVeiculosUseCase;
 import br.com.autorepairshop.controller.veiculo.dto.AlterarVeiculoRequest;
 import br.com.autorepairshop.controller.veiculo.dto.CriarVeiculoRequest;
 import br.com.autorepairshop.controller.veiculo.dto.ListarVeiculosRequest;
 import br.com.autorepairshop.controller.veiculo.dto.ListarVeiculosResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+@Tag(name = "Veiculo", description = "Gestão administrativa CRUD DE VEICULOS")
 @RestController
 @RequestMapping("/api/veiculo")
 public class VeiculoController {
@@ -69,8 +72,9 @@ public class VeiculoController {
     public ResponseEntity<ListarVeiculosResponse> listar(
             @ModelAttribute ListarVeiculosRequest request
     ) {
-        var input = request.paraInput();
-        var listaVeiculosOutput = listarVeiculosUseCase.executar(input);
+        var inputRequest = request.paraInput();
+        var inputPaginacao = new PaginacaoInput(request.pagina(),request.tamanho());
+        var listaVeiculosOutput = listarVeiculosUseCase.executar(inputRequest, inputPaginacao);
         var response = ListarVeiculosResponse.paraResponse(listaVeiculosOutput);
 
         return ResponseEntity.ok(response);

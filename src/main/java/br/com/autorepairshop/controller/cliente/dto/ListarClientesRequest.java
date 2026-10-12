@@ -1,6 +1,6 @@
 package br.com.autorepairshop.controller.cliente.dto;
 
-import br.com.autorepairshop.application.cliente.list.ListarClientesInput;
+import br.com.autorepairshop.application.cliente.listar.ListarClientesInput;
 
 public record ListarClientesRequest(
 	    String nome,
@@ -10,7 +10,7 @@ public record ListarClientesRequest(
 	    String telefone,
 	    Boolean ativo,
 	    int pagina,
-	    int tamanho
+        int tamanho
 	) {
 	
 	 public ListarClientesInput paraInput() {
@@ -20,9 +20,7 @@ public record ListarClientesRequest(
 	            cpfCnpj,
 	            email,
 	            ativo,
-	            telefone,
-	            pagina,
-	            tamanho
+	            telefone
 	        );
 	    }
 }

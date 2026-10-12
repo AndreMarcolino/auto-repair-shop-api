@@ -5,15 +5,13 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
-import br.com.autorepairshop.application.veiculo.list.ListarVeiculosOutput;
+import br.com.autorepairshop.application.veiculo.listar.ListarVeiculosOutput;
 import br.com.autorepairshop.application.veiculo.shared.VeiculoOutput;
+import br.com.autorepairshop.controller.dto.PaginacaoResponse;
 
 public record ListarVeiculosResponse(
         List<VeiculoItemResponse> veiculos,
-        int pagina,
-        int tamanho,
-        long totalElementos,
-        int totalPaginas
+        PaginacaoResponse paginacao
 ) {
     public static ListarVeiculosResponse paraResponse(
             ListarVeiculosOutput output
@@ -25,10 +23,7 @@ public record ListarVeiculosResponse(
 
         return new ListarVeiculosResponse(
                 veiculos,
-                output.pagina(),
-                output.tamanho(),
-                output.totalElementos(),
-                output.totalPaginas()
+                PaginacaoResponse.paraResponse(output.paginacao())
         );
     }
 

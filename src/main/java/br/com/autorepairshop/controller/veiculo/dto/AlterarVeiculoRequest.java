@@ -1,6 +1,6 @@
 package br.com.autorepairshop.controller.veiculo.dto;
 
-import br.com.autorepairshop.application.veiculo.update.AlterarVeiculoInput;
+import br.com.autorepairshop.application.veiculo.alterar.AlterarVeiculoInput;
 
 public record AlterarVeiculoRequest(
     String placa,

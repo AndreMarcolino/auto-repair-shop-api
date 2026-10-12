@@ -19,11 +19,15 @@ public enum DomainError {
 	PLACA_VEICULO_JA_CADASTRADA("DOM-015","Placa já cadastrada"),
 	ID_VEICULO_INVALIDO("DOM-016", "Código do Veículo inválido"),
 	VEICULO_NAO_ENCONTRADO("DOM-017","Veículo não encontrado"),
-	DESCRICAO_PECA_OBRIGATORIA("DOM-018","Descrição da peça obrigatória"),
+	DESCRICAO_PECA_OBRIGATORIA("DOM-0018","Descrição da peça obrigatória"),
 	VALOR_REFERENCIA_PECA_INVALIDO("DOM-019","Valor peça inválido"),
 	QUANTIDADE_ESTOQUE_INVALIDA("DOM-020","Quantidade estoque inválida"),
-	DESCRICAO_SERVICO_OBRIGATORIA("DOM-21","Descrição do serviço obrigatória"),
-	VALOR_REFERENCIA_SERVICO_INVALIDO("DOM-22","Valor peça inválido");
+	DESCRICAO_SERVICO_OBRIGATORIA("DOM-021","Descrição do serviço obrigatória"),
+	VALOR_REFERENCIA_SERVICO_INVALIDO("DOM-022","Valor peça inválido"),
+	ID_SERVICO_INVALIDO("DOM-023", "Código do Serviço inválido"),
+	SERVICO_NAO_ENCONTRADO("DOM-024","Serviço não encontrado"),
+	PAGINACAO_NEGATIVA("DOM-025", "A página não pode ser negativa"),
+	TAMANHO_PAGINA("DOM-026","O tamanho da página deve ser maior que zero.");
 	
     private final String codigo;
     private final String mensagem;

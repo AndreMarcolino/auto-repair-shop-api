@@ -1,7 +1,7 @@
 
 package br.com.autorepairshop.controller.veiculo.dto;
 
-import br.com.autorepairshop.application.veiculo.list.ListarVeiculosInput;
+import br.com.autorepairshop.application.veiculo.listar.ListarVeiculosInput;
 
 public record ListarVeiculosRequest(
         String placa,
@@ -16,9 +16,7 @@ public record ListarVeiculosRequest(
                 placa,
                 marca,
                 modelo,
-                anoFabricacao,
-                pagina,
-                tamanho
+                anoFabricacao
         );
     }
 }

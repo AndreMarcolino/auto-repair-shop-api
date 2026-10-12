@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.autorepairshop.application.peca.criar.CriarPecaUseCase;
 import br.com.autorepairshop.controller.peca.dto.CriarPecaRequest;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+@Tag(name = "Peça", description = "Gestão administrativa CRUD de peças e insumos")
 @RestController
 @RequestMapping("/api/peca")
 public class PecaController {

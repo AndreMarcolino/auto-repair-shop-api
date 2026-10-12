@@ -12,18 +12,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.autorepairshop.application.cliente.alterar.AlterarClienteUseCase;
 import br.com.autorepairshop.application.cliente.buscaclientecpfcnpj.BuscarClientePorCpfCnpjUseCase;
-import br.com.autorepairshop.application.cliente.create.CriarClienteUseCase;
+import br.com.autorepairshop.application.cliente.criar.CriarClienteUseCase;
 import br.com.autorepairshop.application.cliente.desativacliente.DesativarClienteUseCase;
-import br.com.autorepairshop.application.cliente.list.ListarClientesUseCase;
-import br.com.autorepairshop.application.cliente.update.AlterarClienteUseCase;
+import br.com.autorepairshop.application.cliente.listar.ListarClientesUseCase;
+import br.com.autorepairshop.application.shared.dto.PaginacaoInput;
 import br.com.autorepairshop.controller.cliente.dto.AlterarClienteRequest;
 import br.com.autorepairshop.controller.cliente.dto.ClienteResponse;
 import br.com.autorepairshop.controller.cliente.dto.CriarClienteRequest;
 import br.com.autorepairshop.controller.cliente.dto.ListarClientesRequest;
 import br.com.autorepairshop.controller.cliente.dto.ListarClientesResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+@Tag(name = "Cliente", description = "Gestão administrativa CRUD de clientes")
 @RestController
 @RequestMapping("/api/cliente")
 public class ClienteController {
@@ -68,8 +71,9 @@ public class ClienteController {
 	        @ModelAttribute ListarClientesRequest request
 	    ) {
 		 
-	        var input = request.paraInput();
-		    var listaClienteOutput = listarClientesUseCase.executar(input);
+	        var inputRequest = request.paraInput();
+	        var inputPaginacao = new PaginacaoInput(request.pagina(),request.tamanho());
+		    var listaClienteOutput = listarClientesUseCase.executar(inputRequest,inputPaginacao);
 		    var response = ListarClientesResponse.paraResponse(listaClienteOutput);	       
 		    return ResponseEntity.ok(response);
 	    }
