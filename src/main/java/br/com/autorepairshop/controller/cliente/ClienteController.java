@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.autorepairshop.application.cliente.alterar.AlterarClienteUseCase;
 import br.com.autorepairshop.application.cliente.buscaclientecpfcnpj.BuscarClientePorCpfCnpjUseCase;
+import br.com.autorepairshop.application.cliente.buscaclienteporid.BuscarClientePorIdUseCase;
 import br.com.autorepairshop.application.cliente.criar.CriarClienteUseCase;
 import br.com.autorepairshop.application.cliente.desativacliente.DesativarClienteUseCase;
 import br.com.autorepairshop.application.cliente.listar.ListarClientesUseCase;
@@ -40,15 +41,19 @@ public class ClienteController {
 	private final BuscarClientePorCpfCnpjUseCase buscarClientePorCpfCnpjUseCase;
 
 	private final DesativarClienteUseCase desativarClienteUseCase;
+	
+	private final BuscarClientePorIdUseCase buscarClientePorIdUseCase;
 
 	public ClienteController(CriarClienteUseCase clienteUserCase, AlterarClienteUseCase alterarClienteUseCase,
 			ListarClientesUseCase listarClientesUseCase, BuscarClientePorCpfCnpjUseCase buscarClientePorCpfCnpjUseCase,
-			DesativarClienteUseCase desativarClienteUseCase) {
+			DesativarClienteUseCase desativarClienteUseCase,
+			BuscarClientePorIdUseCase buscarClientePorIdUseCase) {
 		this.criarClienteUseCase = clienteUserCase;
 		this.alterarClienteUseCase = alterarClienteUseCase;
 		this.listarClientesUseCase = listarClientesUseCase;
 		this.desativarClienteUseCase = desativarClienteUseCase;
 		this.buscarClientePorCpfCnpjUseCase = buscarClientePorCpfCnpjUseCase;
+		this.buscarClientePorIdUseCase=buscarClientePorIdUseCase;
 	}
 
 	@PostMapping
@@ -87,4 +92,15 @@ public class ClienteController {
 		desativarClienteUseCase.executar(id);
 		return ResponseEntity.noContent().build();
 	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<ClienteResponse> buscarClientePorId(@RequestParam String id) {
+		var output = this.buscarClientePorIdUseCase.executar(id);
+		if(output.isPresent())
+		{
+			return ResponseEntity.ok(ClienteResponse.toResponse(output.get())); 
+		}
+		return ResponseEntity.notFound().build();
+	}
+
 }

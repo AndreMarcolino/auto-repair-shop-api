@@ -9,15 +9,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.autorepairshop.application.insumo.alterar.AlterarInsumoUseCase;
+import br.com.autorepairshop.application.insumo.buscarinsumoporid.BuscarInsumoPorIdUseCase;
 import br.com.autorepairshop.application.insumo.criar.CriarInsumoUseCase;
 import br.com.autorepairshop.application.insumo.excluir.ExcluirInsumoUseCase;
 import br.com.autorepairshop.application.insumo.listar.ListarInsumosUseCase;
 import br.com.autorepairshop.application.shared.dto.PaginacaoInput;
 import br.com.autorepairshop.controller.insumo.dto.AlterarInsumoRequest;
 import br.com.autorepairshop.controller.insumo.dto.CriarInsumoRequest;
+import br.com.autorepairshop.controller.insumo.dto.InsumoResponse;
 import br.com.autorepairshop.controller.insumo.dto.ListarInsumosRequest;
 import br.com.autorepairshop.controller.insumo.dto.ListarInsumosResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,16 +39,20 @@ public class InsumoController {
     
     private final ExcluirInsumoUseCase excluirInsumoUseCase;
     
+    private final BuscarInsumoPorIdUseCase buscarInsumoPorIdUseCase;
+    
     
     public InsumoController(CriarInsumoUseCase criarInsumoUseCase,
     		AlterarInsumoUseCase alterarInsumoUseCase,
     		ListarInsumosUseCase listarInsumosUseCase,
-    		ExcluirInsumoUseCase excluirInsumoUseCase)
+    		ExcluirInsumoUseCase excluirInsumoUseCase,
+    		BuscarInsumoPorIdUseCase buscarInsumoPorIdUseCase)
     {
         this.criarInsumoUseCase = criarInsumoUseCase;
         this.alterarInsumoUseCase = alterarInsumoUseCase;
         this.listarInsumosUseCase = listarInsumosUseCase;
         this.excluirInsumoUseCase = excluirInsumoUseCase;
+        this.buscarInsumoPorIdUseCase = buscarInsumoPorIdUseCase;
         }
 
     @PostMapping
@@ -85,5 +92,15 @@ public class InsumoController {
         excluirInsumoUseCase.executar(id);
         return ResponseEntity.noContent().build();
     }
+    
+    @GetMapping("/{id}")
+	public ResponseEntity<InsumoResponse> buscarInsumoPorId(@RequestParam String id) {
+		var output = this.buscarInsumoPorIdUseCase.executar(id);
+		if(output.isPresent())
+		{
+			return ResponseEntity.ok(InsumoResponse.toResponse(output.get())); 
+		}
+		return ResponseEntity.notFound().build();
+	}
     
 }

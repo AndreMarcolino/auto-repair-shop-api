@@ -68,6 +68,7 @@ class InsumoRepositoryAdapter implements InsumoRepository {
                 page.getTotalPages());
     }
     
+    @Override
     public void excluir(UUID id) {
         jpaRepository.deleteById(id);
     }

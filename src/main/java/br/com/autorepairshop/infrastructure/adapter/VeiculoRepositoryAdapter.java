@@ -8,13 +8,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import br.com.autorepairshop.domain.cliente.Cliente;
 import br.com.autorepairshop.domain.shared.Pagina;
 import br.com.autorepairshop.domain.shared.Paginacao;
 import br.com.autorepairshop.domain.shared.valueobject.Placa;
 import br.com.autorepairshop.domain.veiculo.Veiculo;
 import br.com.autorepairshop.domain.veiculo.VeiculoRepository;
-import br.com.autorepairshop.infrastructure.persistence.ServicoEntity;
 import br.com.autorepairshop.infrastructure.persistence.VeiculoEntity;
 import br.com.autorepairshop.infrastructure.repository.VeiculoJpaRepository;
 
@@ -66,6 +64,7 @@ public class VeiculoRepositoryAdapter implements VeiculoRepository {
 				
 	}
 
+	@Override
 	public void excluir(UUID id) {
 		jpaRepository.deleteById(id);
 	}

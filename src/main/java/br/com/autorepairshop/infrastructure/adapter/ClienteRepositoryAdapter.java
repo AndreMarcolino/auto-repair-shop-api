@@ -79,6 +79,11 @@ class ClienteRepositoryAdapter implements ClienteRepository {
 		        map(ClienteEntity::toDomain);
 		}
 
+	  @Override
+	  public void excluir(UUID id) {
+		 jpaRepository.deleteById(id);
+	  }
+
 	
 }
 

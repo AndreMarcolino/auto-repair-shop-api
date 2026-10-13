@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.autorepairshop.application.shared.dto.PaginacaoInput;
 import br.com.autorepairshop.application.veiculo.alterar.AlterarVeiculoUseCase;
+import br.com.autorepairshop.application.veiculo.buscarveiculoporid.BuscarVeiculoPorIdUseCase;
 import br.com.autorepairshop.application.veiculo.criar.CriarVeiculoUseCase;
 import br.com.autorepairshop.application.veiculo.excluir.ExcluirVeiculoUseCase;
 import br.com.autorepairshop.application.veiculo.listar.ListarVeiculosUseCase;
@@ -20,6 +22,7 @@ import br.com.autorepairshop.controller.veiculo.dto.AlterarVeiculoRequest;
 import br.com.autorepairshop.controller.veiculo.dto.CriarVeiculoRequest;
 import br.com.autorepairshop.controller.veiculo.dto.ListarVeiculosRequest;
 import br.com.autorepairshop.controller.veiculo.dto.ListarVeiculosResponse;
+import br.com.autorepairshop.controller.veiculo.dto.VeiculoResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
@@ -36,15 +39,19 @@ public class VeiculoController {
     
     private final ExcluirVeiculoUseCase excluirVeiculoUseCase;
     
+    private final BuscarVeiculoPorIdUseCase buscarVeiculoPorIdUseCase;
+    
     public VeiculoController(CriarVeiculoUseCase criarVeiculoUseCase,
     		AlterarVeiculoUseCase alterarVeiculoUseCase,
     		ListarVeiculosUseCase listarVeiculosUseCase,
-    		ExcluirVeiculoUseCase excluirVeiculoUseCase)
+    		ExcluirVeiculoUseCase excluirVeiculoUseCase,
+    		BuscarVeiculoPorIdUseCase buscarVeiculoPorIdUseCase)
     {
         this.criarVeiculoUseCase = criarVeiculoUseCase;
         this.alterarVeiculoUseCase = alterarVeiculoUseCase;
         this.listarVeiculosUseCase = listarVeiculosUseCase;
         this.excluirVeiculoUseCase = excluirVeiculoUseCase;
+        this.buscarVeiculoPorIdUseCase = buscarVeiculoPorIdUseCase;
         
         }
 
@@ -85,4 +92,14 @@ public class VeiculoController {
         excluirVeiculoUseCase.executar(id);
         return ResponseEntity.noContent().build();
     }
+    
+    @GetMapping("/{id}")
+  	public ResponseEntity<VeiculoResponse> buscarVeiculoPorId(@RequestParam String id) {
+  		var output = this.buscarVeiculoPorIdUseCase.executar(id);
+  		if(output.isPresent())
+  		{
+  			return ResponseEntity.ok(VeiculoResponse.toResponse(output.get())); 
+  		}
+  		return ResponseEntity.notFound().build();
+  	}
 }

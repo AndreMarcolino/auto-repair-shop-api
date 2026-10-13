@@ -9,17 +9,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.autorepairshop.application.servico.alterar.AlterarServicoUseCase;
+import br.com.autorepairshop.application.servico.buscarservicoporid.BuscarServicoPorIdService;
+import br.com.autorepairshop.application.servico.buscarservicoporid.BuscarServicoPorIdUseCase;
 import br.com.autorepairshop.application.servico.criar.CriarServicoUseCase;
 import br.com.autorepairshop.application.servico.excluir.ExcluirServicoUseCase;
 import br.com.autorepairshop.application.servico.listar.ListarServicosUseCase;
 import br.com.autorepairshop.application.shared.dto.PaginacaoInput;
+import br.com.autorepairshop.controller.insumo.dto.InsumoResponse;
 import br.com.autorepairshop.controller.servico.dto.AlterarServicoRequest;
 import br.com.autorepairshop.controller.servico.dto.CriarServicoRequest;
 import br.com.autorepairshop.controller.servico.dto.ListarServicosRequest;
 import br.com.autorepairshop.controller.servico.dto.ListarServicosResponse;
+import br.com.autorepairshop.controller.servico.dto.ServicoResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
@@ -36,16 +41,20 @@ public class ServicoController {
     
     private final ListarServicosUseCase listarServicosUseCase;
     
+    private final BuscarServicoPorIdUseCase buscarServicoPorIdUseCase;
+    
    
     public ServicoController(CriarServicoUseCase criarServicoUseCase,
     		AlterarServicoUseCase alterarServicoUseCase,
     		ExcluirServicoUseCase excluirServicoUseCase,
-    		ListarServicosUseCase listarServicosUseCase)
+    		ListarServicosUseCase listarServicosUseCase,
+    		BuscarServicoPorIdUseCase buscarServicoPorIdUseCase)
     {
         this.criarServicoUseCase = criarServicoUseCase;
         this.alterarServicoUseCase = alterarServicoUseCase;
         this.excluirServicoUseCase = excluirServicoUseCase;
         this.listarServicosUseCase = listarServicosUseCase;
+        this.buscarServicoPorIdUseCase = buscarServicoPorIdUseCase;
        
         }
 
@@ -86,5 +95,15 @@ public class ServicoController {
         excluirServicoUseCase.executar(id);
         return ResponseEntity.noContent().build();
     }
+    
+    @GetMapping("/{id}")
+  	public ResponseEntity<ServicoResponse> buscarServicoPorId(@RequestParam String id) {
+  		var output = this.buscarServicoPorIdUseCase.executar(id);
+  		if(output.isPresent())
+  		{
+  			return ResponseEntity.ok(ServicoResponse.toResponse(output.get())); 
+  		}
+  		return ResponseEntity.notFound().build();
+  	}
     
 }

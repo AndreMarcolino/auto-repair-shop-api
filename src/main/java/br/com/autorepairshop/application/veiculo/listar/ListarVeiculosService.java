@@ -2,8 +2,6 @@ package br.com.autorepairshop.application.veiculo.listar;
 
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,7 +9,6 @@ import br.com.autorepairshop.application.shared.dto.PaginacaoInput;
 import br.com.autorepairshop.application.shared.dto.PaginacaoOutput;
 import br.com.autorepairshop.application.veiculo.shared.VeiculoOutput;
 import br.com.autorepairshop.domain.shared.Pagina;
-import br.com.autorepairshop.domain.shared.Paginacao;
 import br.com.autorepairshop.domain.shared.valueobject.Placa;
 import br.com.autorepairshop.domain.veiculo.Veiculo;
 import br.com.autorepairshop.domain.veiculo.VeiculoRepository;

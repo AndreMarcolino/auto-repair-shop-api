@@ -5,16 +5,13 @@ import java.util.UUID;
 
 import br.com.autorepairshop.domain.shared.Pagina;
 import br.com.autorepairshop.domain.shared.Paginacao;
+import br.com.autorepairshop.domain.shared.repository.DomainRepository;
 import br.com.autorepairshop.domain.shared.valueobject.CpfCnpj;
 
-public interface ClienteRepository {
+public interface ClienteRepository extends DomainRepository<Cliente, UUID> {
 
     boolean existeCpfCnpj(CpfCnpj cpfCnpj);
-
     void salvar(Cliente cliente);
-
-    Optional<Cliente> buscarPorId(UUID id);
-    
     Pagina<Cliente> buscar(
             String nome,
             Short tipoPessoa,

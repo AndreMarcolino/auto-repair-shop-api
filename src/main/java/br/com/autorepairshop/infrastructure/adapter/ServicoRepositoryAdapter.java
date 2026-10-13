@@ -38,6 +38,7 @@ public class ServicoRepositoryAdapter implements ServicoRepository {
                 .map(ServicoEntity::toDomain);
     }
     
+    @Override
     public void excluir(UUID id) {
         jpaRepository.deleteById(id);
     }
