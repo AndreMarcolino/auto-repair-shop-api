@@ -1,5 +1,7 @@
 package br.com.autorepairshop.domain.shared;
 
+import br.com.autorepairshop.domain.ordemservico.StatusOrdemServico;
+
 public enum DomainError {
 
 	NOME_CLIENTE_OBRIGATORIO("DOM-001", "Nome do cliente é obrigatório."),
@@ -29,8 +31,17 @@ public enum DomainError {
 	PAGINACAO_NEGATIVA("DOM-025", "A página não pode ser negativa"),
 	TAMANHO_PAGINA("DOM-026","O tamanho da página deve ser maior que zero."),
 	ID_INSUMO_INVALIDO("DOM-027", "Código do insumo inválido"),
-	INSUMO_NAO_ENCONTRADO("DOM-028", "Insumo não encontrado");
-	
+	INSUMO_NAO_ENCONTRADO("DOM-028", "Insumo não encontrado"),
+	CLIENTE_DESATIVADO_ABERTURA_OS("DOM-029","Não é possível abrir Ordem de serviço para um cliente desativado"),
+	VEICULO_OBRIGATORIO_ABERTURA_OS("DOM-030","Veículo obrigatório para abertura de OS"),
+	CLIENTE_OBRIGATORIO_ABERTURA_OS("DOM-031","Cliente obrigatório para abertura de OS"),
+	RELATO_DO_PROBLEMA_OBRIGATORIO_ABERTURA_OS("DOM-032","Relato do problema obrigatório para abetura OS"),
+	RELATO_DO_PROBLEMA_INVALIDO("DOM-033","O problema relatado deve ter no máximo 1.000 caracteres"),
+	ID_ORDEM_SERVICO_INVALIDO("DOM-034", "Id da Ordem de Serviço inválido"),
+	OS_NAO_ENCONTRADA("DOM-035", "Ordem de Serviço não encontrada"),
+	INICIO_DIAGNOSTICO_NAO_PERMITIDO("DOM-036","Ordem de serviço deve estar com  o status " + StatusOrdemServico.RECEBIDA),
+	STATUS_INVALIDO_PARA_GERACAO_ORCAMENTO("DOM-037","Ordem de serviço deve estar com  o status " + StatusOrdemServico.EM_DIAGNOSTICO + " para geração do orçamento"),
+	STATUS_INVALIDO_PARA_ENVIO_ORCAMENTO("DOM-037","Ordem de serviço deve estar com  o status " + StatusOrdemServico.AGUARDANDO_ENVIO_ORCAMENTO + " para envio de orçamento");
     private final String codigo;
     private final String mensagem;
 

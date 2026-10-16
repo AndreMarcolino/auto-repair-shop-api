@@ -116,7 +116,7 @@ public class Veiculo {
     public Instant getCriadoEm() { return criadoEm; }
     public Instant getAtualizadoEm() { return atualizadoEm; }
     
-    public static Veiculo reconstituir(
+    public static Veiculo recriaAgregado(
             UUID id,
             Placa placa,
             String marca,

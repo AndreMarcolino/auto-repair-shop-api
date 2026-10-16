@@ -1,0 +1,11 @@
+package br.com.autorepairshop.domain.ordemservico;
+
+import java.util.Optional;
+import java.util.UUID;
+
+public interface OrdemServicoRepository {
+
+    void salvar(OrdemServico ordemServico);
+
+    Optional<OrdemServico> buscarPorId(UUID id);
+}

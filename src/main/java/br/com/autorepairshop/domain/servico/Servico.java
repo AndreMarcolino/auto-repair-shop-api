@@ -74,7 +74,7 @@ public class Servico {
     public Instant getCriadoEm() { return criadoEm; }
     public Instant getAtualizadoEm() { return atualizadoEm; }
 
-    public static Servico reconstituir(
+    public static Servico recriaAgregado(
             UUID id,
             String descricao,
             BigDecimal valorReferencia,

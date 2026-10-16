@@ -93,7 +93,7 @@ public class ClienteEntity {
     }
 
     public Cliente toDomain() {
-        return Cliente.reconstituir(
+        return Cliente.recriaAgregado(
                 id,
                 nome,
                 new CpfCnpj(

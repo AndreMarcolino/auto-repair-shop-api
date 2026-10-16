@@ -43,7 +43,7 @@ public class ServicoEntity {
     }
 
     public Servico toDomain() {
-        return Servico.reconstituir(
+        return Servico.recriaAgregado(
                 id,
                 descricao,
                 valorReferencia,

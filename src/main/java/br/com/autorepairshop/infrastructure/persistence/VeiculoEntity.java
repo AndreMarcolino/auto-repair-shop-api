@@ -63,7 +63,7 @@ public class VeiculoEntity {
     }
 
     public Veiculo toDomain() {
-        return Veiculo.reconstituir(
+        return Veiculo.recriaAgregado(
             id,
             Placa.criar(placa.getPlaca()),
             marca,

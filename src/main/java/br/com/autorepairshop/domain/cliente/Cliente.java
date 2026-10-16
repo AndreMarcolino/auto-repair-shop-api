@@ -122,7 +122,7 @@ public class Cliente {
 		return atualizadoEm;
 	}
 
-	public static Cliente reconstituir(UUID id, String nome, CpfCnpj cpfCnpj, String telefone, Email email,
+	public static Cliente recriaAgregado(UUID id, String nome, CpfCnpj cpfCnpj, String telefone, Email email,
 			boolean ativo, LocalDateTime criadoEm, LocalDateTime atualizadoEm) {
 
 		return new Cliente(id, nome, cpfCnpj, telefone, email, ativo, criadoEm, atualizadoEm);

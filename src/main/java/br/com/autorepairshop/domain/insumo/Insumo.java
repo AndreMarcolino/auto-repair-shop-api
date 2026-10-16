@@ -96,7 +96,7 @@ public class Insumo {
     public Instant getCriadoEm() { return criadoEm; }
     public Instant getAtualizadoEm() { return atualizadoEm; }
 
-    public static Insumo reconstituir(
+    public static Insumo recriaAgregado(
             UUID id,
             String descricao,
             BigDecimal valorReferencia,

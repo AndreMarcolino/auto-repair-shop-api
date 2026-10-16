@@ -47,7 +47,7 @@ public class InsumoEntity {
     }
 
     public Insumo toDomain() {
-        return Insumo.reconstituir(
+        return Insumo.recriaAgregado(
                 id,
                 descricao,
                 valorReferencia,

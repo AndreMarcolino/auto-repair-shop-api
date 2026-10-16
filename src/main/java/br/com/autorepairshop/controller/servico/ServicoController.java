@@ -13,13 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.autorepairshop.application.servico.alterar.AlterarServicoUseCase;
-import br.com.autorepairshop.application.servico.buscarservicoporid.BuscarServicoPorIdService;
 import br.com.autorepairshop.application.servico.buscarservicoporid.BuscarServicoPorIdUseCase;
 import br.com.autorepairshop.application.servico.criar.CriarServicoUseCase;
 import br.com.autorepairshop.application.servico.excluir.ExcluirServicoUseCase;
 import br.com.autorepairshop.application.servico.listar.ListarServicosUseCase;
 import br.com.autorepairshop.application.shared.dto.PaginacaoInput;
-import br.com.autorepairshop.controller.insumo.dto.InsumoResponse;
 import br.com.autorepairshop.controller.servico.dto.AlterarServicoRequest;
 import br.com.autorepairshop.controller.servico.dto.CriarServicoRequest;
 import br.com.autorepairshop.controller.servico.dto.ListarServicosRequest;
