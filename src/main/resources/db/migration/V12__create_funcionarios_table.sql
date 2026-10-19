@@ -1,0 +1,10 @@
+CREATE TABLE funcionarios (
+    id UUID PRIMARY KEY,
+    nome VARCHAR(150) NOT NULL,
+    tipo VARCHAR(20) NOT NULL,
+    ativo BOOLEAN NOT NULL DEFAULT TRUE,
+    criado_em TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT ck_funcionarios_tipo
+        CHECK (tipo IN ('ATENDENTE', 'MECANICO'))
+);

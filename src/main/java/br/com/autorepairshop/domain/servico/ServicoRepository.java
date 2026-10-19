@@ -1,6 +1,8 @@
 package br.com.autorepairshop.domain.servico;
 
 import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 import br.com.autorepairshop.domain.shared.Pagina;
@@ -16,5 +18,5 @@ public interface ServicoRepository extends DomainRepository<Servico, UUID> {
     	    Paginacao paginacao
     	);
    
-    
+    List<Servico> buscarPorIds(Collection<UUID> ids);
 }

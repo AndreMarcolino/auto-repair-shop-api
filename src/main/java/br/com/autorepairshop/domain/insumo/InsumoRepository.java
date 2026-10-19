@@ -1,6 +1,8 @@
 package br.com.autorepairshop.domain.insumo;
 
 import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 import br.com.autorepairshop.domain.shared.Pagina;
@@ -15,4 +17,6 @@ public interface InsumoRepository extends DomainRepository<Insumo, UUID> {
             BigDecimal valorReferencia,
             Integer quantidadeEstoque,
             Paginacao paginacao);
+    
+    List<Insumo> buscarPorIds(Collection<UUID> ids);
 }

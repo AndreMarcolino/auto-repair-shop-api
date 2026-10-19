@@ -1,6 +1,8 @@
 package br.com.autorepairshop.infrastructure.adapter;
 
 import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -9,10 +11,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import br.com.autorepairshop.domain.insumo.Insumo;
 import br.com.autorepairshop.domain.servico.Servico;
 import br.com.autorepairshop.domain.servico.ServicoRepository;
 import br.com.autorepairshop.domain.shared.Pagina;
 import br.com.autorepairshop.domain.shared.Paginacao;
+import br.com.autorepairshop.infrastructure.persistence.InsumoEntity;
 import br.com.autorepairshop.infrastructure.persistence.ServicoEntity;
 import br.com.autorepairshop.infrastructure.repository.ServicoJpaRepository;
 
@@ -66,6 +70,14 @@ public class ServicoRepositoryAdapter implements ServicoRepository {
 		            page.getTotalElements(),
 		            page.getTotalPages()
 		        );
+	}
+	
+	@Override
+	public List<Servico> buscarPorIds(Collection<UUID> ids) {
+		return jpaRepository.findAllById(ids)
+	            .stream()
+	            .map(ServicoEntity::toDomain)
+	            .toList();
 	}
     
     

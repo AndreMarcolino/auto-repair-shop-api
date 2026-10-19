@@ -1,6 +1,8 @@
 package br.com.autorepairshop.infrastructure.adapter;
 
 import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -72,4 +74,12 @@ class InsumoRepositoryAdapter implements InsumoRepository {
     public void excluir(UUID id) {
         jpaRepository.deleteById(id);
     }
+
+	@Override
+	public List<Insumo> buscarPorIds(Collection<UUID> ids) {
+		return jpaRepository.findAllByIdIn(ids)
+	            .stream()
+	            .map(InsumoEntity::toDomain)
+	            .toList();
+	}
 }

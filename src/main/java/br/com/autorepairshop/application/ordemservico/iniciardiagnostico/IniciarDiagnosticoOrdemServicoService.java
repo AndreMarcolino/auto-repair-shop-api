@@ -5,6 +5,10 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.autorepairshop.domain.funcionario.Funcionario;
+import br.com.autorepairshop.domain.funcionario.FuncionarioRepository;
+import br.com.autorepairshop.domain.orcamento.Orcamento;
+import br.com.autorepairshop.domain.orcamento.OrcamentoRepository;
 import br.com.autorepairshop.domain.ordemservico.OrdemServico;
 import br.com.autorepairshop.domain.ordemservico.OrdemServicoRepository;
 import br.com.autorepairshop.domain.ordemservico.StatusOrdemServico;
@@ -21,14 +25,22 @@ public class IniciarDiagnosticoOrdemServicoService implements IniciarDiagnostico
 	
 	private final HistoricoStatusOrdemServicoRepository historicoStatusOrdemServicoRepository;
 	
+	private final OrcamentoRepository orcamentoRepository;
+	
+	private final FuncionarioRepository funcionarioRepository;
+	
 	public IniciarDiagnosticoOrdemServicoService(OrdemServicoRepository ordemServicoRepository,
-			HistoricoStatusOrdemServicoRepository historicoStatusOrdemServicoRepository) {
+			HistoricoStatusOrdemServicoRepository historicoStatusOrdemServicoRepository,
+			OrcamentoRepository orcamentoRepository,
+			FuncionarioRepository funcionarioRepository) {
 		this.ordemServicoRepository = ordemServicoRepository;
 		this.historicoStatusOrdemServicoRepository = historicoStatusOrdemServicoRepository;
+		this.orcamentoRepository = orcamentoRepository;
+		this.funcionarioRepository = funcionarioRepository;
 	}
 	@Override
 	@Transactional
-	public String executar(IniciarDiagnosticoOrdemServicoInput input) {
+	public void executar(IniciarDiagnosticoOrdemServicoInput input) {
 		
 		UUID idOrdemServico = null;
         if(input.idOrdemServico() == null || input.idOrdemServico().isBlank()) {
@@ -43,8 +55,22 @@ public class IniciarDiagnosticoOrdemServicoService implements IniciarDiagnostico
         	throw new DomainException(DomainError.ID_ORDEM_SERVICO_INVALIDO);
         }
         
+        UUID idMecanico = null;
+    	try {
+        	
+        	idMecanico = UUID.fromString(input.idOrdemServico());
+        } catch (IllegalArgumentException | NullPointerException exception) {
+        	throw new DomainException(DomainError.ID_ORDEM_SERVICO_INVALIDO);
+        }
         
-        
+    	Funcionario funcionario = funcionarioRepository
+    	        .buscarPorId(UUID.fromString(input.mecanicoId()))
+    	        .orElseThrow(() ->
+    	                new DomainException(DomainError.ID_MECANICO_INVALIDO));
+    	
+    	if (!funcionario.podeAtenderExecutarServico()) {
+    	    throw new DomainException(DomainError.FUNCIONARIO_SEM_PERMISSAO);
+    	}
         OrdemServico ordemServico = ordemServicoRepository.buscarPorId(idOrdemServico)
                 .orElseThrow(() -> new DomainException(DomainError.OS_NAO_ENCONTRADA));
         
@@ -52,16 +78,15 @@ public class IniciarDiagnosticoOrdemServicoService implements IniciarDiagnostico
 		ordemServico.iniciarDiagnostico();
 		
 		this.ordemServicoRepository.salvar(ordemServico);
-		historicoStatusOrdemServicoRepository.salvar(
-                HistoricoStatusOrdemServico.registrar(
-                        idOrdemServico,
-                        statusAnterior,
-                        ordemServico.getStatus()));
-        
+		var orcamento = Orcamento.criar(ordemServico.getId(), funcionario.getId());
+		this.orcamentoRepository.salvar(orcamento);
 		
+		var historico = HistoricoStatusOrdemServico.registrar(
+                idOrdemServico,
+                statusAnterior,
+                ordemServico.getStatus());
 		
+		historicoStatusOrdemServicoRepository.salvar(historico);
 		
-		return ordemServico.getId().toString();
-
 	}
 }

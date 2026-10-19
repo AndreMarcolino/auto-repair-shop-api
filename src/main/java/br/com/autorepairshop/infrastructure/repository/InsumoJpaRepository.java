@@ -2,6 +2,8 @@ package br.com.autorepairshop.infrastructure.repository;
 
 
 import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -35,4 +37,6 @@ public interface InsumoJpaRepository extends JpaRepository<InsumoEntity, UUID> {
 	        @Param("valorReferencia") BigDecimal valorReferencia,
 	        @Param("quantidadeEstoque") Integer quantidadeEstoque, 
 	        Pageable paginacao);
+	
+	 List<InsumoEntity> findAllByIdIn(Collection<UUID> ids);;
 }

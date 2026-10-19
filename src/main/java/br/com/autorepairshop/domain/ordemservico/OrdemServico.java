@@ -109,108 +109,106 @@ public class OrdemServico {
     	if(!this.status.equals(StatusOrdemServico.RECEBIDA)) {
     		throw new DomainException(DomainError.INICIO_DIAGNOSTICO_NAO_PERMITIDO);
     	}
-        transicionarPara(StatusOrdemServico.EM_DIAGNOSTICO);
+    	this.status = StatusOrdemServico.EM_DIAGNOSTICO;
     }
 
-    public void aguardarEnvioOrcamento() {
-    	if(!this.status.equals(StatusOrdemServico.EM_DIAGNOSTICO)) {
-    		throw new DomainException(DomainError.STATUS_INVALIDO_PARA_GERACAO_ORCAMENTO);
-    	}
-        transicionarPara(
-            StatusOrdemServico.AGUARDANDO_ENVIO_ORCAMENTO
-        );
-    }
-
-    public void aguardarAprovacao() {
-    	if(!this.status.equals(StatusOrdemServico.AGUARDANDO_ENVIO_ORCAMENTO)) {
-    		throw new DomainException(DomainError.STATUS_INVALIDO_PARA_ENVIO_ORCAMENTO);
-    	}
-        transicionarPara(
-            StatusOrdemServico.AGUARDANDO_APROVACAO
-        );
-    }
-
-    public void aguardarPecas() {
-        transicionarPara(StatusOrdemServico.AGUARDANDO_PECAS);
-    }
-
-    public void iniciarExecucao() {
-        transicionarPara(StatusOrdemServico.EM_EXECUCAO);
-    }
-
-    public void finalizar() {
-        transicionarPara(StatusOrdemServico.FINALIZADA);
-    }
-
-    public void entregar() {
-        transicionarPara(StatusOrdemServico.ENTREGUE);
-    }
-
-    public void registrarPagamento() {
-        if (dataPagamento != null) {
-            throw new IllegalStateException(
-                "O pagamento já foi registrado."
+    public void enviarParaAprovacaoCliente() {
+        if (status != StatusOrdemServico.EM_DIAGNOSTICO) {
+            throw new DomainException(
+                DomainError.STATUS_INVALIDO_PARA_ENVIO_ORCAMENTO
             );
         }
 
-        dataPagamento = LocalDateTime.now();
+        this.status = StatusOrdemServico.AGUARDANDO_APROVACAO;
     }
 
-    private void transicionarPara(StatusOrdemServico novoStatus) {
-        boolean transicaoPermitida = switch (status) {
-            case RECEBIDA ->
-                novoStatus == StatusOrdemServico.EM_DIAGNOSTICO;
-
-            case EM_DIAGNOSTICO ->
-                novoStatus ==
-                    StatusOrdemServico.AGUARDANDO_ENVIO_ORCAMENTO;
-
-            case AGUARDANDO_ENVIO_ORCAMENTO ->
-                novoStatus ==
-                    StatusOrdemServico.AGUARDANDO_APROVACAO;
-
-            case AGUARDANDO_APROVACAO ->
-                novoStatus == StatusOrdemServico.AGUARDANDO_PECAS
-                || novoStatus == StatusOrdemServico.EM_EXECUCAO;
-
-            case AGUARDANDO_PECAS ->
-                novoStatus == StatusOrdemServico.EM_EXECUCAO;
-
-            case EM_EXECUCAO ->
-                novoStatus == StatusOrdemServico.FINALIZADA;
-
-            case FINALIZADA ->
-                novoStatus == StatusOrdemServico.ENTREGUE;
-
-            case ENTREGUE -> false;
-        };
-
-        if (!transicaoPermitida) {
-            throw new IllegalStateException(
-                "Transição inválida de " + status
-                    + " para " + novoStatus
+    public void aprovar() {
+        if (status != StatusOrdemServico.AGUARDANDO_APROVACAO) {
+            throw new DomainException(
+                DomainError.ORDEM_SERVICO_NAO_PODE_SER_APROVADA
             );
         }
 
-        LocalDateTime agora = LocalDateTime.now();
-
-        switch (novoStatus) {
-            case EM_EXECUCAO ->
-                dataInicioServico = agora;
-
-            case FINALIZADA ->
-                dataFimServico = agora;
-
-            case ENTREGUE ->
-                dataEntrega = agora;
-
-            default -> {
-                // Nenhuma data adicional a registrar.
-            }
+        this.status = StatusOrdemServico.APROVADA;
+        
+    }
+    
+    public void rejeitar() {
+        if (status != StatusOrdemServico.AGUARDANDO_APROVACAO) {
+            throw new DomainException(
+                DomainError.ORDEM_SERVICO_NAO_PODE_SER_APROVADA
+            );
         }
 
-        status = novoStatus;
+        this.status = StatusOrdemServico.REJEITADA;
+        
     }
+    
+    public void iniciarServico() {
+    	 if (status != StatusOrdemServico.APROVADA) {
+             throw new DomainException(
+                 DomainError.ORDEM_SERVICO_TEM_QUE_ESTAR_COM_STATUS_APROVADA
+             );
+         }
+
+         this.status = StatusOrdemServico.EM_EXECUCAO;
+         this.dataInicioServico = LocalDateTime.now();
+    }
+    
+    public void finalizarServico() {
+   	 if (status != StatusOrdemServico.EM_EXECUCAO) {
+            throw new DomainException(
+                DomainError.ORDEM_SERVICO_TEM_QUE_ESTAR_COM_STATUS_APROVADA
+            );
+        }
+
+        this.status = StatusOrdemServico.FINALIZADA;
+        this.dataFimServico = LocalDateTime.now();
+   }
+
+    public void aguardarPagamento() {
+      	 if (status != StatusOrdemServico.FINALIZADA) {
+               throw new DomainException(
+                   DomainError.ORDEM_SERVICO_TEM_QUE_ESTAR_COM_STATUS_FINALIZADA
+               );
+           }
+
+           this.status = StatusOrdemServico.AGUARDANDO_PAGAMENTO;
+      }
+    public void aguardarInsumos() {
+        if (status != StatusOrdemServico.APROVADA) {
+            throw new DomainException(
+                DomainError.ORDEM_SERVICO_AGUARDANDO_INSUMOS
+            );
+        }
+
+        this.status = StatusOrdemServico.AGUARDANDO_PECAS;
+    }
+
+    
+    public void registrarPagamento() 
+	{
+	   	 if (status != StatusOrdemServico.AGUARDANDO_PAGAMENTO) {
+	            throw new DomainException(
+	                DomainError.ORDEM_SERVICO_TEM_QUE_ESTAR_COM_STATUS_AGUARDANDO_PAGAMENTO
+	            );
+	        }
+
+	        this.status = StatusOrdemServico.PAGA;
+	        this.dataPagamento = LocalDateTime.now();
+	 }
+    
+    public void entregarVeiculo() 
+	{
+	   	 if (status != StatusOrdemServico.PAGA) {
+	            throw new DomainException(
+	                DomainError.ORDEM_SERVICO_TEM_QUE_ESTAR_PAGA
+	            );
+	        }
+
+	        this.status = StatusOrdemServico.ENTREGUE;
+	        this.dataPagamento = LocalDateTime.now();
+	   }
 
     public UUID getId() {
         return id;

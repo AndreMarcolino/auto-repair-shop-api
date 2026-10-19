@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -93,7 +94,13 @@ public class TratamentoExcecoesApi {
                 "O parâmetro '" + exception.getParameterName()
                         + "' é obrigatório.");
     }
-    
+   
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<Void> tratarAcessoNegado(
+            AuthorizationDeniedException exception) {
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
     private ResponseEntity<ErroApi> badRequest(
             String codigo, String mensagem) {
 

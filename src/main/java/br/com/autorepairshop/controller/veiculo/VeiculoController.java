@@ -1,6 +1,7 @@
 package br.com.autorepairshop.controller.veiculo;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -23,12 +24,17 @@ import br.com.autorepairshop.controller.veiculo.dto.CriarVeiculoRequest;
 import br.com.autorepairshop.controller.veiculo.dto.ListarVeiculosRequest;
 import br.com.autorepairshop.controller.veiculo.dto.ListarVeiculosResponse;
 import br.com.autorepairshop.controller.veiculo.dto.VeiculoResponse;
+import br.com.autorepairshop.infrastructure.security.OpenApiSecurity;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @Tag(name = "Veiculo", description = "Gestão administrativa CRUD DE VEICULOS")
 @RestController
 @RequestMapping("/api/veiculo")
+@SecurityRequirement(name = OpenApiSecurity.BEARER_AUTH)
+@PreAuthorize("hasRole(T(br.com.autorepairshop.infrastructure.security.Roles).ATENDENTE)")
+
 public class VeiculoController {
 
     private final CriarVeiculoUseCase criarVeiculoUseCase;

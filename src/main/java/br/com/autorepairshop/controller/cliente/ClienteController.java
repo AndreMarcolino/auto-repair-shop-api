@@ -1,6 +1,7 @@
 package br.com.autorepairshop.controller.cliente;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -24,12 +25,17 @@ import br.com.autorepairshop.controller.cliente.dto.ClienteResponse;
 import br.com.autorepairshop.controller.cliente.dto.CriarClienteRequest;
 import br.com.autorepairshop.controller.cliente.dto.ListarClientesRequest;
 import br.com.autorepairshop.controller.cliente.dto.ListarClientesResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @Tag(name = "Cliente", description = "Gestão administrativa CRUD de clientes")
 @RestController
 @RequestMapping("/api/cliente")
+
+@SecurityRequirement(name = "bearerAuth")
+@PreAuthorize("hasRole(T(br.com.autorepairshop.infrastructure.security.Roles).ATENDENTE)")
+
 public class ClienteController {
 
 	private final CriarClienteUseCase criarClienteUseCase;

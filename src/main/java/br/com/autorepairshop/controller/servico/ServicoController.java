@@ -1,6 +1,7 @@
 package br.com.autorepairshop.controller.servico;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -23,12 +24,16 @@ import br.com.autorepairshop.controller.servico.dto.CriarServicoRequest;
 import br.com.autorepairshop.controller.servico.dto.ListarServicosRequest;
 import br.com.autorepairshop.controller.servico.dto.ListarServicosResponse;
 import br.com.autorepairshop.controller.servico.dto.ServicoResponse;
+import br.com.autorepairshop.infrastructure.security.OpenApiSecurity;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @Tag(name = "Servico", description = "Gestão administrativa CRUD de serviços")
 @RestController
 @RequestMapping("/api/servico")
+@SecurityRequirement(name = OpenApiSecurity.BEARER_AUTH)
+
 public class ServicoController {
 
     private final CriarServicoUseCase criarServicoUseCase;
@@ -56,6 +61,7 @@ public class ServicoController {
        
         }
 
+    @PreAuthorize("hasRole(T(br.com.autorepairshop.infrastructure.security.Roles).ATENDENTE)")
     @PostMapping
     public ResponseEntity<?> criar(
             @Valid @RequestBody CriarServicoRequest request) {
@@ -64,6 +70,7 @@ public class ServicoController {
         return ResponseEntity.ok(servicoInput.id().toString());
     }
     
+    @PreAuthorize("hasRole(T(br.com.autorepairshop.infrastructure.security.Roles).ATENDENTE)")
     @PatchMapping("/{id}")
     public ResponseEntity<?> alterar(
             @PathVariable String id,
@@ -75,6 +82,7 @@ public class ServicoController {
         return ResponseEntity.noContent().build();
     }
     
+    @PreAuthorize("hasAnyRole(T(br.com.autorepairshop.infrastructure.security.Roles).ATENDENTE, T(br.com.autorepairshop.infrastructure.security.Roles).MECANICO)")
     @GetMapping
     public ResponseEntity<ListarServicosResponse> listar(
             @ModelAttribute ListarServicosRequest request
@@ -88,6 +96,7 @@ public class ServicoController {
         return ResponseEntity.ok(response);
     }
     
+    @PreAuthorize("hasRole(T(br.com.autorepairshop.infrastructure.security.Roles).ATENDENTE)")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(@PathVariable String id) {
         excluirServicoUseCase.executar(id);
@@ -95,6 +104,7 @@ public class ServicoController {
     }
     
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole(T(br.com.autorepairshop.infrastructure.security.Roles).ATENDENTE, T(br.com.autorepairshop.infrastructure.security.Roles).MECANICO)")
   	public ResponseEntity<ServicoResponse> buscarServicoPorId(@RequestParam String id) {
   		var output = this.buscarServicoPorIdUseCase.executar(id);
   		if(output.isPresent())
