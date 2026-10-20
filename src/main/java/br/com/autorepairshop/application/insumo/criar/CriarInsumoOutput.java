@@ -10,7 +10,6 @@ public record CriarInsumoOutput(
         UUID id,
         String descricao,
         BigDecimal valorReferencia,
-        int quantidadeEstoque,
         Instant criadoEm
 ) {
     public static CriarInsumoOutput fromDomain(Insumo insumo) {
@@ -18,7 +17,6 @@ public record CriarInsumoOutput(
                 insumo.getId(),
                 insumo.getDescricao(),
                 insumo.getValorReferencia(),
-                insumo.getQuantidadeEstoque(),
                 insumo.getCriadoEm());
     }
 }

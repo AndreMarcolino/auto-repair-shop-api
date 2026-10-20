@@ -4,9 +4,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
-import br.com.autorepairshop.application.ordemservico.aguardarpagamento.AguardarPagamentoOrdemServicoInput;
 import br.com.autorepairshop.application.ordemservico.aguardarpagamento.AguardarPagamentoOrdemServicoUseCase;
-import br.com.autorepairshop.application.ordemservico.prepararinsumos.PrepararInsumosOrdemServicoUseCase;
 
 @Component
 public class OrdemServicoFinalizadaListener {

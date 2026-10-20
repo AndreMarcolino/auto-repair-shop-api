@@ -10,7 +10,6 @@ public record InsumoResponse(
         UUID id,
         String descricao,
         BigDecimal valorReferencia,
-        Integer quantidadeEstoque,
         Instant criadoEm,
         Instant atualizadoEm
 ) {
@@ -19,7 +18,6 @@ public record InsumoResponse(
                 output.id(),
                 output.descricao(),
                 output.valorReferencia(),
-                output.quantidadeEstoque(),
                 output.criadoEm(),
                 output.atualizadoEm()
         );

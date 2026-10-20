@@ -27,15 +27,10 @@ public interface InsumoJpaRepository extends JpaRepository<InsumoEntity, UUID> {
 	            :valorReferencia IS NULL
 	            OR i.valorReferencia = :valorReferencia
 	        )
-	        AND (
-	            :quantidadeEstoque IS NULL
-	            OR i.quantidadeEstoque = :quantidadeEstoque
-	        )
 	        """)
 	Page<InsumoEntity> buscar(
 	        @Param("descricao") String descricao,
 	        @Param("valorReferencia") BigDecimal valorReferencia,
-	        @Param("quantidadeEstoque") Integer quantidadeEstoque, 
 	        Pageable paginacao);
 	
 	 List<InsumoEntity> findAllByIdIn(Collection<UUID> ids);;

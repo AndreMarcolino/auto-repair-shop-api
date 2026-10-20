@@ -133,6 +133,15 @@ public class OrdemServico {
         
     }
     
+    public void aguardarPecas() {
+        if (this.status != StatusOrdemServico.AGUARDANDO_APROVACAO) {
+            throw new DomainException(
+                    DomainError.ORDEM_SERVICO_NAO_PODE_SER_APROVADA);
+        }
+
+        this.status = StatusOrdemServico.AGUARDANDO_PECAS;
+    }
+    
     public void rejeitar() {
         if (status != StatusOrdemServico.AGUARDANDO_APROVACAO) {
             throw new DomainException(
@@ -172,19 +181,19 @@ public class OrdemServico {
                    DomainError.ORDEM_SERVICO_TEM_QUE_ESTAR_COM_STATUS_FINALIZADA
                );
            }
-
            this.status = StatusOrdemServico.AGUARDANDO_PAGAMENTO;
       }
-    public void aguardarInsumos() {
-        if (status != StatusOrdemServico.APROVADA) {
+    
+   
+    public void liberarAposReposicaoDePecas() {
+        if (this.status != StatusOrdemServico.AGUARDANDO_PECAS) {
             throw new DomainException(
-                DomainError.ORDEM_SERVICO_AGUARDANDO_INSUMOS
+                DomainError.ORDEM_SERVICO_TEM_QUE_ESTAR_AGUARDANDO_PECAS
             );
         }
 
-        this.status = StatusOrdemServico.AGUARDANDO_PECAS;
+        this.status = StatusOrdemServico.APROVADA;
     }
-
     
     public void registrarPagamento() 
 	{

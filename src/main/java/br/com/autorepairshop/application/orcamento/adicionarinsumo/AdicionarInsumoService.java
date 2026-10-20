@@ -37,8 +37,7 @@ public class AdicionarInsumoService implements AdicionarInsumoUseCase {
 		
 	 	
         ValidaEntrada(input);
-        var idOrcemServico = UUID.fromString(input.ordemServicoId());
-        var idMecanio = UUID.fromString(input.uuidUsuario());
+        var idOrdemServico = UUID.fromString(input.ordemServicoId());
         List<UUID> idsInsumos = input.insumos().stream().map(insumo -> UUID.fromString(insumo.idInsumo())).toList();  
         var insumos = this.insumoRepository.buscarPorIds(idsInsumos);
         if (insumos.size() != idsInsumos.size()) {
@@ -54,7 +53,7 @@ public class AdicionarInsumoService implements AdicionarInsumoUseCase {
         
         
         
-        Orcamento orcamento = orcamentoRepository.buscarPorOrdemServicoId(idOrcemServico)
+        Orcamento orcamento = orcamentoRepository.buscarPorOrdemServicoId(idOrdemServico)
                 .orElseThrow(() -> new DomainException(DomainError.ORCAMENTO_NAO_ENCONTRADO));
         
         for (Insumo insumo : insumos) {

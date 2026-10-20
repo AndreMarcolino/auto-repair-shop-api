@@ -4,6 +4,5 @@ import java.math.BigDecimal;
 
 public record CriarInsumoInput(
         String descricao,
-        BigDecimal valorReferencia,
-        Integer quantidadeEstoque
+        BigDecimal valorReferencia
 ) {}

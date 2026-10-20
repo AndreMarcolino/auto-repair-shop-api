@@ -1,5 +1,6 @@
 package br.com.autorepairshop.infrastructure.adapter;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import br.com.autorepairshop.domain.ordemservico.OrdemServico;
 import br.com.autorepairshop.domain.ordemservico.OrdemServicoRepository;
+import br.com.autorepairshop.domain.ordemservico.StatusOrdemServico;
 import br.com.autorepairshop.infrastructure.persistence.OrdemServicoEntity;
 import br.com.autorepairshop.infrastructure.repository.OrdemServicoJpaRepository;
 
@@ -33,4 +35,9 @@ class OrdemServicoRepositoryAdapter implements OrdemServicoRepository {
         return jpaRepository.findById(id)
                 .map(OrdemServicoEntity::toDomain);
     }
+
+	@Override
+	public List<OrdemServico> buscarPorStatus(StatusOrdemServico status) {
+		return this.jpaRepository.findByStatus(status.getId()).stream().map(OrdemServicoEntity::toDomain).toList();
+	}
 }

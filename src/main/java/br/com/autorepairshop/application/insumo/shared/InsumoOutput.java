@@ -10,7 +10,6 @@ public record InsumoOutput(
         UUID id,
         String descricao,
         BigDecimal valorReferencia,
-        int quantidadeEstoque,
         Instant criadoEm,
         Instant atualizadoEm) {
 
@@ -19,7 +18,6 @@ public record InsumoOutput(
                 insumo.getId(),
                 insumo.getDescricao(),
                 insumo.getValorReferencia(),
-                insumo.getQuantidadeEstoque(),
                 insumo.getCriadoEm(),
                 insumo.getAtualizadoEm());
     }

@@ -54,7 +54,6 @@ class InsumoRepositoryAdapter implements InsumoRepository {
         Page<InsumoEntity> page = jpaRepository.buscar(
                 descricao,
                 valorReferencia,
-                quantidadeEstoque,
                 pageable);
 
         var insumos = page.getContent()

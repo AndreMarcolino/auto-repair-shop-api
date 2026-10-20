@@ -23,9 +23,7 @@ public class InsumoEntity {
     @Column(name = "valor_referencia", nullable = false, precision = 12, scale = 2)
     private BigDecimal valorReferencia;
 
-    @Column(name = "quantidade_estoque", nullable = false)
-    private Integer quantidadeEstoque;
-
+ 
     @Column(name = "criado_em", nullable = false)
     private Instant criadoEm;
 
@@ -40,7 +38,6 @@ public class InsumoEntity {
         entity.id = insumo.getId();
         entity.descricao = insumo.getDescricao();
         entity.valorReferencia = insumo.getValorReferencia();
-        entity.quantidadeEstoque = insumo.getQuantidadeEstoque();
         entity.criadoEm = insumo.getCriadoEm();
         entity.atualizadoEm = insumo.getAtualizadoEm();
         return entity;
@@ -51,7 +48,6 @@ public class InsumoEntity {
                 id,
                 descricao,
                 valorReferencia,
-                quantidadeEstoque,
                 criadoEm,
                 atualizadoEm);
     }
@@ -59,7 +55,6 @@ public class InsumoEntity {
     public UUID getId() { return id; }
     public String getDescricao() { return descricao; }
     public BigDecimal getValorReferencia() { return valorReferencia; }
-    public Integer getQuantidadeEstoque() { return quantidadeEstoque; }
     public Instant getCriadoEm() { return criadoEm; }
     public Instant getAtualizadoEm() { return atualizadoEm; }
 }

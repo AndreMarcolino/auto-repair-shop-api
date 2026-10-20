@@ -40,8 +40,7 @@ public class AlterarInsumoService implements AlterarInsumoUseCase {
 
         insumo.get().atualizarDados(
                 input.descricao(),
-                input.valorReferencia(),
-                input.quantidadeEstoque());
+                input.valorReferencia());
 
         insumoRepository.salvar(insumo.get());
     }

@@ -12,7 +12,6 @@ public class Insumo {
     private final UUID id;
     private String descricao;
     private BigDecimal valorReferencia;
-    private int quantidadeEstoque;
     private final Instant criadoEm;
     private Instant atualizadoEm;
 
@@ -20,44 +19,37 @@ public class Insumo {
             UUID id,
             String descricao,
             BigDecimal valorReferencia,
-            int quantidadeEstoque,
             Instant criadoEm,
             Instant atualizadoEm) {
         this.id = validarId(id);
         this.descricao = validarDescricao(descricao);
         this.valorReferencia = valorReferencia;
-        this.quantidadeEstoque = quantidadeEstoque;
         this.criadoEm = criadoEm;
         this.atualizadoEm = atualizadoEm;
     }
 
     public static Insumo criar(
             String descricao,
-            BigDecimal valorReferencia,
-            Integer quantidadeEstoque) {
+            BigDecimal valorReferencia) {
         Instant agora = Instant.now();
 
         
         validarDescricao(descricao);
         validarValorReferencia(valorReferencia);
-        validarQuantidadeEstoque(quantidadeEstoque);
         
         return new Insumo(
                 UUID.randomUUID(),
                 descricao,
                 valorReferencia,
-                quantidadeEstoque == null ? 0 : quantidadeEstoque,
                 agora,
                 agora);
     }
 
     public void atualizarDados(
             String descricao,
-            BigDecimal valorReferencia,
-            Integer quantidadeEstoque) {
+            BigDecimal valorReferencia) {
         this.descricao = validarDescricao(descricao);
         this.valorReferencia = validarValorReferencia(valorReferencia);
-        this.quantidadeEstoque = validarQuantidadeEstoque(quantidadeEstoque);
         this.atualizadoEm = Instant.now();
     }
 
@@ -82,17 +74,11 @@ public class Insumo {
         return valor;
     }
 
-    private static int validarQuantidadeEstoque(Integer quantidade) {
-        if (quantidade == null || quantidade <= 0) {
-            throw new DomainException(DomainError.QUANTIDADE_ESTOQUE_INVALIDA);
-        }
-        return quantidade;
-    }
+   
 
     public UUID getId() { return id; }
     public String getDescricao() { return descricao; }
     public BigDecimal getValorReferencia() { return valorReferencia; }
-    public int getQuantidadeEstoque() { return quantidadeEstoque; }
     public Instant getCriadoEm() { return criadoEm; }
     public Instant getAtualizadoEm() { return atualizadoEm; }
 
@@ -100,9 +86,8 @@ public class Insumo {
             UUID id,
             String descricao,
             BigDecimal valorReferencia,
-            int quantidadeEstoque,
             Instant criadoEm,
             Instant atualizadoEm) {
-        return new Insumo(id, descricao, valorReferencia, quantidadeEstoque, criadoEm, atualizadoEm);
+        return new Insumo(id, descricao, valorReferencia, criadoEm, atualizadoEm);
     }
 }

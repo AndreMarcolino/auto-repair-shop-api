@@ -1,6 +1,5 @@
 package br.com.autorepairshop.domain.shared;
 
-import br.com.autorepairshop.domain.orcamento.StatusOrcamento;
 import br.com.autorepairshop.domain.ordemservico.StatusOrdemServico;
 
 public enum DomainError {
@@ -69,8 +68,9 @@ public enum DomainError {
 	ORDEM_SERVICO_TEM_QUE_ESTAR_COM_STATUS_FINALIZADA("DOM-062","Ordem de serviço tem que estar com o status finalizada"),
 	ID_ATENDENTE_INVALIDO("DOM-063", "Id do Atendente inválido"),
 	ORDEM_SERVICO_TEM_QUE_ESTAR_COM_STATUS_AGUARDANDO_PAGAMENTO("DOM-064","Ordem de serviço tem que estar aguardando pagamento"),
-	ORDEM_SERVICO_TEM_QUE_ESTAR_PAGA("DOM-064","Ordem de serviço tem que estar com o status paga");
-	
+	ORDEM_SERVICO_TEM_QUE_ESTAR_PAGA("DOM-064","Ordem de serviço tem que estar com o status paga"),
+	ESTOQUE_INSUFICIENTE("DOM-065","Estoque insuficiente"),
+	ORDEM_SERVICO_TEM_QUE_ESTAR_AGUARDANDO_PECAS("DOM-065","Ordem de serviço tem que estar com o Aguardando Peças");
 	private final String codigo;
     private final String mensagem;
 

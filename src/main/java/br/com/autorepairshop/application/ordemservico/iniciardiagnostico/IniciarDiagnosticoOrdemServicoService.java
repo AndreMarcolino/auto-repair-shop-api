@@ -55,10 +55,9 @@ public class IniciarDiagnosticoOrdemServicoService implements IniciarDiagnostico
         	throw new DomainException(DomainError.ID_ORDEM_SERVICO_INVALIDO);
         }
         
-        UUID idMecanico = null;
     	try {
         	
-        	idMecanico = UUID.fromString(input.idOrdemServico());
+        	UUID.fromString(input.idOrdemServico());
         } catch (IllegalArgumentException | NullPointerException exception) {
         	throw new DomainException(DomainError.ID_ORDEM_SERVICO_INVALIDO);
         }
