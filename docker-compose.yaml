@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: auto-repair-shop-postgres
+    environment:
+      POSTGRES_DB: auto_repair_shop
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Defina DB_PASSWORD no arquivo .env}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d auto_repair_shop"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: auto-repair-shop-api
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/auto_repair_shop
+      DB_USERNAME: app
+      DB_PASSWORD: ${DB_PASSWORD:?Defina DB_PASSWORD no arquivo .env}
+      JWT_SECRET: ${JWT_SECRET:?Defina JWT_SECRET no arquivo .env}
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
