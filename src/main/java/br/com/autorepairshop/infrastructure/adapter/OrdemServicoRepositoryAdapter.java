@@ -40,4 +40,30 @@ class OrdemServicoRepositoryAdapter implements OrdemServicoRepository {
 	public List<OrdemServico> buscarPorStatus(StatusOrdemServico status) {
 		return this.jpaRepository.findByStatus(status.getId()).stream().map(OrdemServicoEntity::toDomain).toList();
 	}
+	
+
+    @Override
+    public long proximoNumero() {
+        return jpaRepository.proximoNumero();
+    }
+    
+    @Override
+    public List<OrdemServico> buscarPorStatus(
+            List<StatusOrdemServico> status) {
+
+        List<Short> idsStatus = status.stream()
+                .map(StatusOrdemServico::getId)
+                .toList();
+
+        return jpaRepository.findByStatusIn(idsStatus)
+                .stream()
+                .map(OrdemServicoEntity::toDomain)
+                .toList();
+    }
+
+	@Override
+	public Optional<OrdemServico> buscarPoNumero(String numero) {
+		return this.jpaRepository.findByNumero(numero).map(OrdemServicoEntity::toDomain);
+		
+	}
 }

@@ -48,6 +48,12 @@ public class OrdemServicoEntity {
     
     @Column(name = "problema_relatado", length = 1000)
     private String problemaRelatado;
+    
+    @Column(name = "numero", length = 20, unique = true)
+    private String numero;
+
+    @Column(name = "codigo_acesso_hash", length = 255)
+    private String codigoAcessoHash;
 
     protected OrdemServicoEntity() {
        
@@ -133,6 +139,24 @@ public class OrdemServicoEntity {
 	public void setProblemaRelatado(String problemaRelatado) {
 		this.problemaRelatado = problemaRelatado;
 	}
+	
+	
+
+	public String getNumero() {
+		return numero;
+	}
+
+	public void setNumero(String numero) {
+		this.numero = numero;
+	}
+
+	public String getCodigoAcessoHash() {
+		return codigoAcessoHash;
+	}
+
+	public void setCodigoAcessoHash(String codigoAcessoHash) {
+		this.codigoAcessoHash = codigoAcessoHash;
+	}
 
 	public OrdemServico toDomain() {
         return OrdemServico.recriaAgregado(
@@ -145,7 +169,9 @@ public class OrdemServicoEntity {
             dataFimServico,
             dataPagamento,
             dataEntrega,
-            problemaRelatado
+            problemaRelatado,
+            numero,
+            codigoAcessoHash
         );
     }
     
@@ -162,6 +188,8 @@ public class OrdemServicoEntity {
         entity.dataPagamento = ordemServico.getDataPagamento();
         entity.dataEntrega = ordemServico.getDataEntrega();
         entity.problemaRelatado = ordemServico.getProblemaRelatado();
+        entity.numero = ordemServico.getNumero();
+        entity.codigoAcessoHash = ordemServico.getCodigoAcessoHash();
 
         return entity;
     }

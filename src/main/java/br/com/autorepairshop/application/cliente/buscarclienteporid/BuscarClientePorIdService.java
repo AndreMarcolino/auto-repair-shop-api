@@ -1,4 +1,4 @@
-package br.com.autorepairshop.application.cliente.buscaclienteporid;
+package br.com.autorepairshop.application.cliente.buscarclienteporid;
 
 import java.util.Optional;
 import java.util.UUID;

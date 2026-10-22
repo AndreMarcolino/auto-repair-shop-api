@@ -70,7 +70,13 @@ public enum DomainError {
 	ORDEM_SERVICO_TEM_QUE_ESTAR_COM_STATUS_AGUARDANDO_PAGAMENTO("DOM-064","Ordem de serviço tem que estar aguardando pagamento"),
 	ORDEM_SERVICO_TEM_QUE_ESTAR_PAGA("DOM-064","Ordem de serviço tem que estar com o status paga"),
 	ESTOQUE_INSUFICIENTE("DOM-065","Estoque insuficiente"),
-	ORDEM_SERVICO_TEM_QUE_ESTAR_AGUARDANDO_PECAS("DOM-065","Ordem de serviço tem que estar com o Aguardando Peças");
+	ORDEM_SERVICO_TEM_QUE_ESTAR_AGUARDANDO_PECAS("DOM-065","Ordem de serviço tem que estar com o Aguardando Peças"),
+	NUMERO_ORDEM_SERVICO_INVALIDO("DOM-066","Número da OS inválido"),
+	CODIGO_VERIFICACAO_INVALIDO("DOM-067","Código de verificação inválido"),
+	CNPJ_CNPJ_OBRIGATORIO("DOM-068","Cpf/Cnpj obrigatório"),
+	ORDEM_SERVICO_OBRIGATORIO("DOM-069","Número da Ordem de Serviço obrigatório"),
+	CODIGO_VERIFICACAO_OBRIGATORIO("DOM-070","Código de Verificação obrigatório"),
+	CODIGO_ACESSO_INVALIDO("DOM-071","Código de Verificação inválido");
 	private final String codigo;
     private final String mensagem;
 

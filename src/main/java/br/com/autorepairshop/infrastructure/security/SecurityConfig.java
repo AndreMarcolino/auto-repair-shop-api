@@ -90,6 +90,9 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                     "/api/autenticacao/login",
+                    "/api/ordens-servico/cliente/detalhamento",
+                    "/api/ordens-servico/aprovar",
+                    "/api/ordens-servico/reprovar",
                     "/api/autenticacao/gera-token-atendente",
                     "/api/autenticacao/gera-token-mecanico",
                     "/swagger-ui.html",
@@ -104,10 +107,10 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             )
             .exceptionHandling(ex -> ex
-                .authenticationEntryPoint((request, response, exception) ->
+                .authenticationEntryPoint((_, response, _) ->
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED)
                 )
-                .accessDeniedHandler((request, response, exception) ->
+                .accessDeniedHandler((_, response, _) ->
                     response.sendError(HttpServletResponse.SC_FORBIDDEN)
                 )
             )

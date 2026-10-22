@@ -1,4 +1,4 @@
-package br.com.autorepairshop.application.cliente.buscaclientecpfcnpj;
+package br.com.autorepairshop.application.cliente.buscarclientecpfcnpj;
 
 import java.util.Optional;
 

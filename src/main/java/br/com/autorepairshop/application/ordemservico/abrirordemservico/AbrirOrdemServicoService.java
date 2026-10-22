@@ -1,5 +1,6 @@
 package br.com.autorepairshop.application.ordemservico.abrirordemservico;
 
+import java.time.Year;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -12,6 +13,8 @@ import br.com.autorepairshop.domain.ordemservico.OrdemServicoRepository;
 import br.com.autorepairshop.domain.shared.DomainError;
 import br.com.autorepairshop.domain.shared.DomainException;
 import br.com.autorepairshop.domain.veiculo.VeiculoRepository;
+import br.com.autorepairshop.infrastructure.security.CodificadorCodigoAcesso;
+import br.com.autorepairshop.infrastructure.security.GeradorCodigoAcesso;
 
 @Service
 public class AbrirOrdemServicoService implements AbrirOrdemServicoUseCase{
@@ -22,16 +25,23 @@ public class AbrirOrdemServicoService implements AbrirOrdemServicoUseCase{
 	
 	private final OrdemServicoRepository ordemServicoRepository;
 	
+	private final GeradorCodigoAcesso geradorCodigoAcesso;
+	private final CodificadorCodigoAcesso codificadorCodigoAcesso;
+	
 	public AbrirOrdemServicoService(ClienteRepository clienteRepository,
 			VeiculoRepository veiculoRepository,
-			OrdemServicoRepository ordemServicoRepository) {
+			OrdemServicoRepository ordemServicoRepository,
+			GeradorCodigoAcesso geradorCodigoAcesso,
+			CodificadorCodigoAcesso codificadorCodigoAcesso) {
 		this.clienteRepository = clienteRepository;
 		this.veiculoRepository = veiculoRepository;
 		this.ordemServicoRepository = ordemServicoRepository;
+		this.geradorCodigoAcesso = geradorCodigoAcesso;
+		this.codificadorCodigoAcesso = codificadorCodigoAcesso;
 	}
 	@Override
 	@Transactional
-	public String executar(AbrirOrdemServicoInput input) {
+	public AbrirOrdemServicoOutput executar(AbrirOrdemServicoInput input) {
 		
 		UUID idCliente;
         UUID idVeiculo;
@@ -68,11 +78,17 @@ public class AbrirOrdemServicoService implements AbrirOrdemServicoUseCase{
 				 orElseThrow(() ->  
 				 new DomainException(DomainError.VEICULO_NAO_ENCONTRADO));
 
-		var ordemServico = OrdemServico.abrir(idCliente, idVeiculo, input.problemaRelatado());
+		long sequencial = ordemServicoRepository.proximoNumero();
+
+		String numero = "OS-%d-%06d".formatted(Year.now().getValue(),sequencial);
+		String codigoAcesso = geradorCodigoAcesso.gerar();
+		String codigoAcessoHash = codificadorCodigoAcesso.codificar(codigoAcesso);
+
+		var ordemServico = OrdemServico.abrir(numero, codigoAcessoHash,idCliente, idVeiculo, input.problemaRelatado());
 		
 		this.ordemServicoRepository.salvar(ordemServico);
 		
-		return ordemServico.getId().toString();
+		return new AbrirOrdemServicoOutput(numero, codigoAcesso);
 
 	}
 }

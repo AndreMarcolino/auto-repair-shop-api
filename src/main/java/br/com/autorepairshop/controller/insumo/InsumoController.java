@@ -30,32 +30,32 @@ import jakarta.validation.Valid;
 
 @Tag(name = "Insumo", description = "Gestão administrativa CRUD de peças e insumos")
 @RestController
-@RequestMapping("/api/insumo")
+@RequestMapping("/api/insumos")
 @SecurityRequirement(name = "bearerAuth")
 public class InsumoController {
 
-    private final CriarInsumoUseCase criarInsumoUseCase;
+    private final CriarInsumoUseCase criarInsumo;
     
-    private final AlterarInsumoUseCase alterarInsumoUseCase;
+    private final AlterarInsumoUseCase alterarInsumo;
     
-    private final ListarInsumosUseCase listarInsumosUseCase;
+    private final ListarInsumosUseCase listarInsumos;
     
-    private final ExcluirInsumoUseCase excluirInsumoUseCase;
+    private final ExcluirInsumoUseCase excluirInsumo;
     
-    private final BuscarInsumoPorIdUseCase buscarInsumoPorIdUseCase;
+    private final BuscarInsumoPorIdUseCase buscarInsumoPorId;
     
     
-    public InsumoController(CriarInsumoUseCase criarInsumoUseCase,
-    		AlterarInsumoUseCase alterarInsumoUseCase,
-    		ListarInsumosUseCase listarInsumosUseCase,
-    		ExcluirInsumoUseCase excluirInsumoUseCase,
-    		BuscarInsumoPorIdUseCase buscarInsumoPorIdUseCase)
+    public InsumoController(CriarInsumoUseCase criarInsumo,
+    		AlterarInsumoUseCase alterarInsumo,
+    		ListarInsumosUseCase listarInsumos,
+    		ExcluirInsumoUseCase excluirInsumo,
+    		BuscarInsumoPorIdUseCase buscarInsumoPorId)
     {
-        this.criarInsumoUseCase = criarInsumoUseCase;
-        this.alterarInsumoUseCase = alterarInsumoUseCase;
-        this.listarInsumosUseCase = listarInsumosUseCase;
-        this.excluirInsumoUseCase = excluirInsumoUseCase;
-        this.buscarInsumoPorIdUseCase = buscarInsumoPorIdUseCase;
+        this.criarInsumo = criarInsumo;
+        this.alterarInsumo = alterarInsumo;
+        this.listarInsumos = listarInsumos;
+        this.excluirInsumo = excluirInsumo;
+        this.buscarInsumoPorId = buscarInsumoPorId;
         }
 
     @PreAuthorize("hasRole(T(br.com.autorepairshop.infrastructure.security.Roles).ATENDENTE)")
@@ -63,7 +63,7 @@ public class InsumoController {
     public ResponseEntity<?> criar(
             @Valid @RequestBody CriarInsumoRequest request) {
 
-        var servicoOutput = criarInsumoUseCase.executar(request.toInput());
+        var servicoOutput = criarInsumo.executar(request.toInput());
 
         return ResponseEntity.ok(servicoOutput.id().toString());
     }
@@ -75,7 +75,7 @@ public class InsumoController {
             @Valid @RequestBody AlterarInsumoRequest request) {
 
         var input = request.toInput(id);
-        alterarInsumoUseCase.executar(input);
+        alterarInsumo.executar(input);
         return ResponseEntity.noContent().build();
     }
     
@@ -87,7 +87,7 @@ public class InsumoController {
     ) {
         var inputRequest = request.toInput();
         var inputPaginacao = new PaginacaoInput(request.pagina(),request.tamanho());
-        var listaServicosOutput = listarInsumosUseCase.executar(inputRequest,inputPaginacao);
+        var listaServicosOutput = listarInsumos.executar(inputRequest,inputPaginacao);
         var response = ListarInsumosResponse.toResponse(listaServicosOutput);
 
         return ResponseEntity.ok(response);
@@ -97,14 +97,14 @@ public class InsumoController {
     @PreAuthorize("hasRole(T(br.com.autorepairshop.infrastructure.security.Roles).ATENDENTE)")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(@PathVariable String id) {
-        excluirInsumoUseCase.executar(id);
+        excluirInsumo.executar(id);
         return ResponseEntity.noContent().build();
     }
     
     @PreAuthorize("hasAnyRole(T(br.com.autorepairshop.infrastructure.security.Roles).ATENDENTE, T(br.com.autorepairshop.infrastructure.security.Roles).MECANICO)")
     @GetMapping("/{id}")
 	public ResponseEntity<InsumoResponse> buscarInsumoPorId(@RequestParam String id) {
-		var output = this.buscarInsumoPorIdUseCase.executar(id);
+		var output = this.buscarInsumoPorId.executar(id);
 		if(output.isPresent())
 		{
 			return ResponseEntity.ok(InsumoResponse.toResponse(output.get())); 

@@ -3,14 +3,15 @@ package br.com.autorepairshop.controller.ordemservico.dto;
 import br.com.autorepairshop.application.ordemservico.aprovar.AprovarOrdemServicoInput;
 
 public record AprovarOrdemServicoRequest(
-        Short tipoPessoa,
+		String numeroOrdemServico,
+        String codigoVerificacao,
         String cpfCnpj
 ) {
 
-    public AprovarOrdemServicoInput toInput(String idOrdemServico) {
+    public AprovarOrdemServicoInput toInput() {
         return new AprovarOrdemServicoInput(
-                idOrdemServico,
-                tipoPessoa,
+        		numeroOrdemServico,
+        		codigoVerificacao,
                 cpfCnpj
         );
     }

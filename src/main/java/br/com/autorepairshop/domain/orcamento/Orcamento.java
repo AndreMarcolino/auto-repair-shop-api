@@ -90,6 +90,7 @@ public class Orcamento {
 	}
 	
 	public void aprovar() {
+		
 	    if (status != StatusOrcamento.AGUARDANDO_APROVACAO) {
 	        throw new DomainException(
 	            DomainError.ORCAMENTO_NAO_PODE_SER_APROVADO

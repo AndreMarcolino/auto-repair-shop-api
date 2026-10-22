@@ -31,33 +31,33 @@ import jakarta.validation.Valid;
 
 @Tag(name = "Veiculo", description = "Gestão administrativa CRUD DE VEICULOS")
 @RestController
-@RequestMapping("/api/veiculo")
+@RequestMapping("/api/veiculos")
 @SecurityRequirement(name = OpenApiSecurity.BEARER_AUTH)
 @PreAuthorize("hasRole(T(br.com.autorepairshop.infrastructure.security.Roles).ATENDENTE)")
 
 public class VeiculoController {
 
-    private final CriarVeiculoUseCase criarVeiculoUseCase;
+    private final CriarVeiculoUseCase criarVeiculo;
     
-    private final AlterarVeiculoUseCase alterarVeiculoUseCase;
+    private final AlterarVeiculoUseCase alterarVeiculo;
     
-    private final ListarVeiculosUseCase listarVeiculosUseCase;
+    private final ListarVeiculosUseCase listarVeiculos;
     
-    private final ExcluirVeiculoUseCase excluirVeiculoUseCase;
+    private final ExcluirVeiculoUseCase excluirVeiculo;
     
-    private final BuscarVeiculoPorIdUseCase buscarVeiculoPorIdUseCase;
+    private final BuscarVeiculoPorIdUseCase buscarVeiculoPorId;
     
-    public VeiculoController(CriarVeiculoUseCase criarVeiculoUseCase,
-    		AlterarVeiculoUseCase alterarVeiculoUseCase,
-    		ListarVeiculosUseCase listarVeiculosUseCase,
-    		ExcluirVeiculoUseCase excluirVeiculoUseCase,
-    		BuscarVeiculoPorIdUseCase buscarVeiculoPorIdUseCase)
+    public VeiculoController(CriarVeiculoUseCase criarVeiculo,
+    		AlterarVeiculoUseCase alterarVeiculo,
+    		ListarVeiculosUseCase listarVeiculos,
+    		ExcluirVeiculoUseCase excluirVeiculo,
+    		BuscarVeiculoPorIdUseCase buscarVeiculoPorId)
     {
-        this.criarVeiculoUseCase = criarVeiculoUseCase;
-        this.alterarVeiculoUseCase = alterarVeiculoUseCase;
-        this.listarVeiculosUseCase = listarVeiculosUseCase;
-        this.excluirVeiculoUseCase = excluirVeiculoUseCase;
-        this.buscarVeiculoPorIdUseCase = buscarVeiculoPorIdUseCase;
+        this.criarVeiculo = criarVeiculo;
+        this.alterarVeiculo = alterarVeiculo;
+        this.listarVeiculos = listarVeiculos;
+        this.excluirVeiculo = excluirVeiculo;
+        this.buscarVeiculoPorId = buscarVeiculoPorId;
         
         }
 
@@ -65,7 +65,7 @@ public class VeiculoController {
     public ResponseEntity<?> criar(
             @Valid @RequestBody CriarVeiculoRequest request) {
 
-        var veiculoOutput = criarVeiculoUseCase.executar(request.toInput());
+        var veiculoOutput = criarVeiculo.executar(request.toInput());
 
         return ResponseEntity.ok(veiculoOutput.id().toString());
     }
@@ -76,7 +76,7 @@ public class VeiculoController {
             @Valid @RequestBody AlterarVeiculoRequest request) {
 
         var input = request.toInput(id);
-        alterarVeiculoUseCase.executar(input);
+        alterarVeiculo.executar(input);
 
         return ResponseEntity.noContent().build();
     }
@@ -87,7 +87,7 @@ public class VeiculoController {
     ) {
         var inputRequest = request.toInput();
         var inputPaginacao = new PaginacaoInput(request.pagina(),request.tamanho());
-        var listaVeiculosOutput = listarVeiculosUseCase.executar(inputRequest, inputPaginacao);
+        var listaVeiculosOutput = listarVeiculos.executar(inputRequest, inputPaginacao);
         var response = ListarVeiculosResponse.toResponse(listaVeiculosOutput);
 
         return ResponseEntity.ok(response);
@@ -95,13 +95,13 @@ public class VeiculoController {
     
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(@PathVariable String id) {
-        excluirVeiculoUseCase.executar(id);
+        excluirVeiculo.executar(id);
         return ResponseEntity.noContent().build();
     }
     
     @GetMapping("/{id}")
   	public ResponseEntity<VeiculoResponse> buscarVeiculoPorId(@RequestParam String id) {
-  		var output = this.buscarVeiculoPorIdUseCase.executar(id);
+  		var output = this.buscarVeiculoPorId.executar(id);
   		if(output.isPresent())
   		{
   			return ResponseEntity.ok(VeiculoResponse.toResponse(output.get())); 

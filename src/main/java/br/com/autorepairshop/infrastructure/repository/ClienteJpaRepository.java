@@ -45,4 +45,6 @@ public interface ClienteJpaRepository extends JpaRepository<ClienteEntity, UUID>
         Short tipoPessoa,
         String cpfCnpj
     );
+    
+    
 }

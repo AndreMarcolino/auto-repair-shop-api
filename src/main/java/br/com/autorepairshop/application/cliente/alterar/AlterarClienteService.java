@@ -46,7 +46,6 @@ public class AlterarClienteService implements AlterarClienteUseCase {
         	throw new DomainException(DomainError.CLIENTE_NAO_ENCONTRADO);
         }
 
-        // Só verifica duplicidade de cpf/cnpj mudou.
         if (!cliente.get().getCpfCnpj().equals(cpfCnpj) 
         		&& clienteRepository.existeCpfCnpj(cpfCnpj)) {
 

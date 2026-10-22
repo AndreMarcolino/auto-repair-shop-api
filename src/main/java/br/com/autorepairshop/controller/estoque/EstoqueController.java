@@ -9,26 +9,28 @@ import jakarta.validation.Valid;
 
 import br.com.autorepairshop.controller.estoque.dto.RegistrarEntradaEstoqueRequest;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import br.com.autorepairshop.application.estoque.registrarentrada.RegistrarEntradaEstoqueUseCase;
 
+@Tag(name = "Estoque", description = "Gestão de estoque da oficina")
 @RestController
-@RequestMapping("/api/estoques")
+@RequestMapping("/api/estoque")
 @SecurityRequirement(name = "bearerAuth")
 @PreAuthorize("hasRole(T(br.com.autorepairshop.infrastructure.security.Roles).ATENDENTE)")
 public class EstoqueController {
 
-    private final RegistrarEntradaEstoqueUseCase registrarEntradaEstoqueUseCase;
+    private final RegistrarEntradaEstoqueUseCase registrarEntradaEstoque;
 
     public EstoqueController(
-            RegistrarEntradaEstoqueUseCase registrarEntradaEstoqueUseCase) {
-        this.registrarEntradaEstoqueUseCase = registrarEntradaEstoqueUseCase;
+            RegistrarEntradaEstoqueUseCase registrarEntradaEstoque) {
+        this.registrarEntradaEstoque = registrarEntradaEstoque;
     }
 
-    @PostMapping("/entradas")
+    @PostMapping("/entrada")
     public ResponseEntity<Void> registrarEntrada(
             @Valid @RequestBody RegistrarEntradaEstoqueRequest request) {
 
-        registrarEntradaEstoqueUseCase.executar(request.paraInput());
+        registrarEntradaEstoque.executar(request.paraInput());
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

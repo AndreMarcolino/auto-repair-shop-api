@@ -1,5 +1,8 @@
 package br.com.autorepairshop.application.ordemservico.aprovar;
 
-public record AprovarOrdemServicoInput(String idOrdemServico, Short tipoPessoa, String cpfCnpj) {
-
+public record AprovarOrdemServicoInput(
+        String numeroOrdemServico,
+        String codigoVerificacao,
+        String cpfCnpj
+) {
 }

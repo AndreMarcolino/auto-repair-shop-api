@@ -1,5 +1,5 @@
 
-package br.com.autorepairshop.application.cliente.desativacliente;
+package br.com.autorepairshop.application.cliente.desativarcliente;
 
 import java.util.Optional;
 import java.util.UUID;

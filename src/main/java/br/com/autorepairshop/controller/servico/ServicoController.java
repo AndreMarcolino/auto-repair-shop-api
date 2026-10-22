@@ -31,33 +31,33 @@ import jakarta.validation.Valid;
 
 @Tag(name = "Servico", description = "Gestão administrativa CRUD de serviços")
 @RestController
-@RequestMapping("/api/servico")
+@RequestMapping("/api/servicos")
 @SecurityRequirement(name = OpenApiSecurity.BEARER_AUTH)
 
 public class ServicoController {
 
-    private final CriarServicoUseCase criarServicoUseCase;
+    private final CriarServicoUseCase criarServico;
     
-    private final AlterarServicoUseCase alterarServicoUseCase;
+    private final AlterarServicoUseCase alterarServico;
     
-    private final ExcluirServicoUseCase excluirServicoUseCase;
+    private final ExcluirServicoUseCase excluirServico;
     
-    private final ListarServicosUseCase listarServicosUseCase;
+    private final ListarServicosUseCase listarServicos;
     
-    private final BuscarServicoPorIdUseCase buscarServicoPorIdUseCase;
+    private final BuscarServicoPorIdUseCase buscarServicoPorId;
     
    
-    public ServicoController(CriarServicoUseCase criarServicoUseCase,
-    		AlterarServicoUseCase alterarServicoUseCase,
-    		ExcluirServicoUseCase excluirServicoUseCase,
-    		ListarServicosUseCase listarServicosUseCase,
-    		BuscarServicoPorIdUseCase buscarServicoPorIdUseCase)
+    public ServicoController(CriarServicoUseCase criarServico,
+    		AlterarServicoUseCase alterarServico,
+    		ExcluirServicoUseCase excluirServico,
+    		ListarServicosUseCase listarServicos,
+    		BuscarServicoPorIdUseCase buscarServicoPorId)
     {
-        this.criarServicoUseCase = criarServicoUseCase;
-        this.alterarServicoUseCase = alterarServicoUseCase;
-        this.excluirServicoUseCase = excluirServicoUseCase;
-        this.listarServicosUseCase = listarServicosUseCase;
-        this.buscarServicoPorIdUseCase = buscarServicoPorIdUseCase;
+        this.criarServico = criarServico;
+        this.alterarServico = alterarServico;
+        this.excluirServico = excluirServico;
+        this.listarServicos = listarServicos;
+        this.buscarServicoPorId = buscarServicoPorId;
        
         }
 
@@ -66,7 +66,7 @@ public class ServicoController {
     public ResponseEntity<?> criar(
             @Valid @RequestBody CriarServicoRequest request) {
 
-        var servicoInput = criarServicoUseCase.executar(request.toInput());
+        var servicoInput = criarServico.executar(request.toInput());
         return ResponseEntity.ok(servicoInput.id().toString());
     }
     
@@ -77,7 +77,7 @@ public class ServicoController {
             @Valid @RequestBody AlterarServicoRequest request) {
 
         var input = request.toInput(id);
-        alterarServicoUseCase.executar(input);
+        alterarServico.executar(input);
 
         return ResponseEntity.noContent().build();
     }
@@ -90,7 +90,7 @@ public class ServicoController {
     ) {
         var inputRequest = request.toInput();
         var inputPaginacao = new PaginacaoInput(request.pagina(),request.tamanho());
-        var listaServicosOutput = listarServicosUseCase.executar(inputRequest,inputPaginacao);
+        var listaServicosOutput = listarServicos.executar(inputRequest,inputPaginacao);
         var response = ListarServicosResponse.toResponse(listaServicosOutput);
 
         return ResponseEntity.ok(response);
@@ -99,14 +99,14 @@ public class ServicoController {
     @PreAuthorize("hasRole(T(br.com.autorepairshop.infrastructure.security.Roles).ATENDENTE)")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(@PathVariable String id) {
-        excluirServicoUseCase.executar(id);
+        excluirServico.executar(id);
         return ResponseEntity.noContent().build();
     }
     
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole(T(br.com.autorepairshop.infrastructure.security.Roles).ATENDENTE, T(br.com.autorepairshop.infrastructure.security.Roles).MECANICO)")
   	public ResponseEntity<ServicoResponse> buscarServicoPorId(@RequestParam String id) {
-  		var output = this.buscarServicoPorIdUseCase.executar(id);
+  		var output = this.buscarServicoPorId.executar(id);
   		if(output.isPresent())
   		{
   			return ResponseEntity.ok(ServicoResponse.toResponse(output.get())); 

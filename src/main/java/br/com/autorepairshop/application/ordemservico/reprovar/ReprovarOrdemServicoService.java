@@ -1,7 +1,5 @@
 package br.com.autorepairshop.application.ordemservico.reprovar;
 
-import java.util.UUID;
-
 import org.springframework.stereotype.Service;
 
 import br.com.autorepairshop.domain.cliente.ClienteRepository;
@@ -13,6 +11,7 @@ import br.com.autorepairshop.domain.shared.DomainError;
 import br.com.autorepairshop.domain.shared.DomainException;
 import br.com.autorepairshop.domain.shared.valueobject.CpfCnpj;
 import br.com.autorepairshop.domain.shared.valueobject.TipoPessoa;
+import br.com.autorepairshop.infrastructure.security.CodificadorCodigoAcesso;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -22,37 +21,47 @@ public class ReprovarOrdemServicoService implements ReprovarOrdemServicoUseCase 
     private final ClienteRepository clienteRepository;
     private final OrcamentoRepository orcamentoRepository;
     private final HistoricoStatusOrdemServicoRepository historicoRepository;
+    private final CodificadorCodigoAcesso codificadorCodigoAcesso;
 
     public ReprovarOrdemServicoService(
             OrdemServicoRepository ordemServicoRepository,
             ClienteRepository clienteRepository,
             OrcamentoRepository orcamentoRepository,
-            HistoricoStatusOrdemServicoRepository historicoRepository) {
+            HistoricoStatusOrdemServicoRepository historicoRepository,
+            CodificadorCodigoAcesso codificadorCodigoAcesso) {
         this.ordemServicoRepository = ordemServicoRepository;
         this.clienteRepository = clienteRepository;
         this.orcamentoRepository = orcamentoRepository;
         this.historicoRepository = historicoRepository;
+        this.codificadorCodigoAcesso = codificadorCodigoAcesso;
     }
 
     @Override
     @Transactional
     public void executar(ReprovarOrdemServicoInput input) {
 
-        if (input.idOrdemServico() == null
-                || input.idOrdemServico().isBlank()) {
-            throw new DomainException(DomainError.ID_ORDEM_SERVICO_INVALIDO);
-        }
+    	if(input.cpfCnpj() == null || input.cpfCnpj().isBlank()) {
+    		throw new DomainException(DomainError.CNPJ_CNPJ_OBRIGATORIO);
+    	}
+    	
+    	if(input.numeroOrdemServico() == null || input.cpfCnpj().isBlank()) {
+    		throw new DomainException(DomainError.ORDEM_SERVICO_OBRIGATORIO);
+    	}
+    	
+    	if(input.codigoVerificacao() == null || input.codigoVerificacao().isBlank()) {
+    		throw new DomainException(DomainError.CODIGO_VERIFICACAO_OBRIGATORIO);
+    	}
+    	
+    	String documento = input.cpfCnpj().replaceAll("[^a-zA-Z0-9]", "").toUpperCase();
 
-        UUID idOrdemServico;
-
-        try {
-            idOrdemServico = UUID.fromString(input.idOrdemServico());
-        } catch (IllegalArgumentException exception) {
-            throw new DomainException(DomainError.ID_ORDEM_SERVICO_INVALIDO);
-        }
-
-        var tipoPessoa = TipoPessoa.deCodigo(input.tipoPessoa());
-        var cpfCnpj = CpfCnpj.criar(tipoPessoa, input.cpfCnpj());
+    	CpfCnpj cpfCnpj = null;
+    	if (documento.length() == 11 && documento.matches("\\d{11}")) {
+    	    cpfCnpj = new CpfCnpj(TipoPessoa.PESSOA_FISICA, documento);
+    	} else if (documento.length() == 14) {
+    		cpfCnpj = new CpfCnpj(TipoPessoa.PESSOA_FISICA, documento);
+    	} else {
+    		throw new DomainException(DomainError.CPF_CNPJ_INVALIDO);
+    	}
 
         var cliente = clienteRepository
                 .buscarPorCpfCnpj(cpfCnpj)
@@ -60,7 +69,7 @@ public class ReprovarOrdemServicoService implements ReprovarOrdemServicoUseCase 
                         DomainError.CLIENTE_NAO_ENCONTRADO));
 
         var ordemServico = ordemServicoRepository
-                .buscarPorId(idOrdemServico)
+                .buscarPoNumero(input.numeroOrdemServico())
                 .orElseThrow(() -> new DomainException(
                         DomainError.ORDEM_SERVICO_NAO_ENCONTRADA));
 
@@ -70,7 +79,7 @@ public class ReprovarOrdemServicoService implements ReprovarOrdemServicoUseCase 
         }
 
         var orcamento = orcamentoRepository
-                .buscarPorOrdemServicoId(idOrdemServico)
+                .buscarPorOrdemServicoId(ordemServico.getId())
                 .orElseThrow(() -> new DomainException(
                         DomainError.ORCAMENTO_NAO_ENCONTRADO));
 
@@ -83,7 +92,7 @@ public class ReprovarOrdemServicoService implements ReprovarOrdemServicoUseCase 
         ordemServicoRepository.salvar(ordemServico);
 
         var historico = HistoricoStatusOrdemServico.registrar(
-                idOrdemServico,
+                ordemServico.getId(),
                 statusAnterior,
                 ordemServico.getStatus());
 

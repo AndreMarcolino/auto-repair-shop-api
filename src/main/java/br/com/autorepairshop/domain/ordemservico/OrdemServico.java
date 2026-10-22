@@ -1,6 +1,8 @@
 package br.com.autorepairshop.domain.ordemservico;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 import br.com.autorepairshop.domain.shared.DomainError;
@@ -19,7 +21,9 @@ public class OrdemServico {
     private LocalDateTime dataPagamento;
     private LocalDateTime dataEntrega;
     private String problemaRelatado;
-
+    private String numero;
+    private String codigoAcessoHash;
+    
     private OrdemServico(
             UUID id,
             UUID clienteId,
@@ -30,7 +34,9 @@ public class OrdemServico {
             LocalDateTime dataFimServico,
             LocalDateTime dataPagamento,
             LocalDateTime dataEntrega,
-            String problemaRelatado) {
+            String problemaRelatado,
+            String numero,
+            String codigoAcessoHash) {
 
         this.id = id;
         this.clienteId = clienteId;
@@ -42,13 +48,24 @@ public class OrdemServico {
         this.dataPagamento = dataPagamento;
         this.dataEntrega = dataEntrega;
         this.problemaRelatado = problemaRelatado;
+        this.numero = numero;
+        this.codigoAcessoHash = codigoAcessoHash;
     }
 
     public static OrdemServico abrir(
+    		String  numeroOS,
+    	    String  codigoAcessoHash,
             UUID clienteId,
             UUID veiculoId,
             String problemaRelatado) {
 
+    	if(numeroOS == null || numeroOS.isBlank()) {
+    		throw new DomainException(DomainError.NUMERO_ORDEM_SERVICO_INVALIDO);
+    	}
+    	
+    	if(codigoAcessoHash == null || codigoAcessoHash.isBlank()) {
+    		throw new DomainException(DomainError.CODIGO_VERIFICACAO_INVALIDO);
+    	}
         if (clienteId == null) {
            throw new DomainException(DomainError.CLIENTE_OBRIGATORIO_ABERTURA_OS);
         }
@@ -75,7 +92,9 @@ public class OrdemServico {
             null,
             null,
             null,
-            problemaRelatado
+            problemaRelatado,
+            numeroOS,
+            codigoAcessoHash
         );
     }
 
@@ -89,7 +108,9 @@ public class OrdemServico {
             LocalDateTime dataFimServico,
             LocalDateTime dataPagamento,
             LocalDateTime dataEntrega,
-            String problemaRelatado) {
+            String problemaRelatado,
+            String numero,
+            String codigoAcessoHash) {
 
         return new OrdemServico(
             id,
@@ -101,7 +122,9 @@ public class OrdemServico {
             dataFimServico,
             dataPagamento,
             dataEntrega,
-            problemaRelatado
+            problemaRelatado,
+            numero,
+            codigoAcessoHash
         );
     }
 
@@ -207,17 +230,36 @@ public class OrdemServico {
 	        this.dataPagamento = LocalDateTime.now();
 	 }
     
-    public void entregarVeiculo() 
-	{
-	   	 if (status != StatusOrdemServico.PAGA) {
-	            throw new DomainException(
-	                DomainError.ORDEM_SERVICO_TEM_QUE_ESTAR_PAGA
-	            );
-	        }
+    public void entregarVeiculo() {
+        if (status != StatusOrdemServico.PAGA) {
+            throw new DomainException(
+                DomainError.ORDEM_SERVICO_TEM_QUE_ESTAR_PAGA
+            );
+        }
 
-	        this.status = StatusOrdemServico.ENTREGUE;
-	        this.dataPagamento = LocalDateTime.now();
-	   }
+        this.status = StatusOrdemServico.ENTREGUE;
+        this.dataEntrega = LocalDateTime.now();
+    }
+    
+    public Optional<Duration> calcularTempoTotalAtendimento() {
+        if (dataAbertura == null || dataEntrega == null) {
+            return Optional.empty();
+        }
+
+        return Optional.of(
+            Duration.between(dataAbertura, dataEntrega)
+        );
+    }
+
+    public Optional<Duration> calcularTempoExecucao() {
+        if (dataInicioServico == null || dataFimServico == null) {
+            return Optional.empty();
+        }
+
+        return Optional.of(
+            Duration.between(dataInicioServico, dataFimServico)
+        );
+    }
 
     public UUID getId() {
         return id;
@@ -258,10 +300,13 @@ public class OrdemServico {
 	public String getProblemaRelatado() {
 		return problemaRelatado;
 	}
-    
-    
-    
-    
-    
+
+	public String getNumero() {
+		return numero;
+	}
+
+	public String getCodigoAcessoHash() {
+		return codigoAcessoHash;
+	}
     
 }
