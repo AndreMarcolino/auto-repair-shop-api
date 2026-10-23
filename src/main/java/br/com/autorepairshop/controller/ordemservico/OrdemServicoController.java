@@ -41,6 +41,8 @@ import br.com.autorepairshop.controller.ordemservico.dto.DetalharOrdemServicoRes
 import br.com.autorepairshop.controller.ordemservico.dto.ListarOrdensServicoResponse;
 import br.com.autorepairshop.controller.ordemservico.dto.ReprovarOrdemServicoRequest;
 import br.com.autorepairshop.infrastructure.security.OpenApiSecurity;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -116,7 +118,7 @@ public class OrdemServicoController {
     @PreAuthorize("hasRole(T(br.com.autorepairshop.infrastructure.security.Roles).MECANICO)")
     @PatchMapping("/{id}/iniciar-diagnostico")
     public ResponseEntity<Void> iniciarDiagnostico(
-            @PathVariable String id,
+            @Parameter(description = "ID da ordem de serviço", example = "55555555-5555-5555-5555-000000000001") @PathVariable String id,
             @AuthenticationPrincipal Jwt jwt) {
 
     	String mecanicoId = jwt.getSubject();
@@ -132,7 +134,7 @@ public class OrdemServicoController {
         return ResponseEntity.noContent().build();
     }
     
-    @PostMapping("//reprovar")
+    @PostMapping("/reprovar")
     public ResponseEntity<Void> reprovar(
             @Valid @RequestBody ReprovarOrdemServicoRequest request) {
 
@@ -143,7 +145,7 @@ public class OrdemServicoController {
     @PreAuthorize("hasRole(T(br.com.autorepairshop.infrastructure.security.Roles).MECANICO)")
     @PostMapping("/{id}/iniciar-servico")
     public ResponseEntity<Void> iniciarServico(
-            @PathVariable String id,
+            @Parameter(description = "ID da ordem de serviço", example = "55555555-5555-5555-5555-000000000006") @PathVariable String id,
             @AuthenticationPrincipal Jwt jwt) {
 
     	String mecanicoId = jwt.getSubject();
@@ -154,7 +156,7 @@ public class OrdemServicoController {
     @PreAuthorize("hasRole(T(br.com.autorepairshop.infrastructure.security.Roles).MECANICO)")
     @PostMapping("/{id}/finalizar-servico")
     public ResponseEntity<Void> finalizarServico(
-            @PathVariable String id,
+            @Parameter(description = "ID da ordem de serviço", example = "55555555-5555-5555-5555-000000000007") @PathVariable String id,
             @AuthenticationPrincipal Jwt jwt) {
 
     	String mecanicoId = jwt.getSubject();
@@ -165,7 +167,7 @@ public class OrdemServicoController {
     @PreAuthorize("hasRole(T(br.com.autorepairshop.infrastructure.security.Roles).ATENDENTE)")
     @PostMapping("/{id}/registrar-pagamento")
     public ResponseEntity<Void> registrarPagamento(
-            @PathVariable String id,
+            @Parameter(description = "ID da ordem de serviço", example = "55555555-5555-5555-5555-000000000008") @PathVariable String id,
             @AuthenticationPrincipal Jwt jwt) {
 
     	String atendenteId = jwt.getSubject();
@@ -176,7 +178,7 @@ public class OrdemServicoController {
     @PreAuthorize("hasRole(T(br.com.autorepairshop.infrastructure.security.Roles).ATENDENTE)")
     @PostMapping("/{id}/entregar-veiculo")
     public ResponseEntity<Void> entregarVeiculo(
-            @PathVariable String id,
+            @Parameter(description = "ID da ordem de serviço", example = "55555555-5555-5555-5555-000000000009") @PathVariable String id,
             @AuthenticationPrincipal Jwt jwt) {
 
     	String atendenteId = jwt.getSubject();
@@ -195,7 +197,7 @@ public class OrdemServicoController {
     
     @GetMapping("/{id}")
     public ResponseEntity<DetalharOrdemServicoResponse> detalhar(
-            @PathVariable String id) {
+            @Parameter(description = "ID da ordem de serviço", example = "55555555-5555-5555-5555-000000000003") @PathVariable String id) {
 
         DetalharOrdemServicoOutput output = detalharOrdemServico.executar(id);
         if (output == null) {
@@ -207,9 +209,9 @@ public class OrdemServicoController {
     
     @GetMapping("/cliente/detalhamento")
     public ResponseEntity<DetalharOrdemServicoClienteResponse> detalharParaCliente(
-            @RequestParam String numeroOrdemServico,
-            @RequestParam String codigoVerificacao,
-            @RequestParam String cpfCnpj) {
+            @Parameter(description = "Número da OS", example = "OS-2026-900003") @RequestParam String numeroOrdemServico,
+            @Parameter(description = "Código de acesso enviado ao cliente", example = "JKLM2345") @RequestParam String codigoVerificacao,
+            @Parameter(description = "CPF ou CNPJ do cliente", example = "\"52998224725\"", schema = @Schema(type = "string")) @RequestParam String cpfCnpj) {
 
         var input = new DetalharOrdemServicoClienteInput(
                 numeroOrdemServico,

@@ -1,5 +1,6 @@
 package br.com.autorepairshop.controller.veiculo;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.autorepairshop.application.shared.dto.PaginacaoInput;
@@ -25,6 +25,7 @@ import br.com.autorepairshop.controller.veiculo.dto.ListarVeiculosRequest;
 import br.com.autorepairshop.controller.veiculo.dto.ListarVeiculosResponse;
 import br.com.autorepairshop.controller.veiculo.dto.VeiculoResponse;
 import br.com.autorepairshop.infrastructure.security.OpenApiSecurity;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -72,7 +73,7 @@ public class VeiculoController {
     
     @PatchMapping("/{id}")
     public ResponseEntity<?> alterar(
-            @PathVariable String id,
+            @Parameter(description = "ID", example = "22222222-2222-2222-2222-000000000001") @PathVariable String id,
             @Valid @RequestBody AlterarVeiculoRequest request) {
 
         var input = request.toInput(id);
@@ -83,7 +84,7 @@ public class VeiculoController {
     
     @GetMapping
     public ResponseEntity<ListarVeiculosResponse> listar(
-            @ModelAttribute ListarVeiculosRequest request
+            @ParameterObject @ModelAttribute ListarVeiculosRequest request
     ) {
         var inputRequest = request.toInput();
         var inputPaginacao = new PaginacaoInput(request.pagina(),request.tamanho());
@@ -94,13 +95,13 @@ public class VeiculoController {
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluir(@PathVariable String id) {
+    public ResponseEntity<Void> excluir(@Parameter(description = "ID", example = "22222222-2222-2222-2222-000000000007") @PathVariable String id) {
         excluirVeiculo.executar(id);
         return ResponseEntity.noContent().build();
     }
     
     @GetMapping("/{id}")
-  	public ResponseEntity<VeiculoResponse> buscarVeiculoPorId(@RequestParam String id) {
+  	public ResponseEntity<VeiculoResponse> buscarVeiculoPorId(@Parameter(description = "ID", example = "22222222-2222-2222-2222-000000000001") @PathVariable String id) {
   		var output = this.buscarVeiculoPorId.executar(id);
   		if(output.isPresent())
   		{

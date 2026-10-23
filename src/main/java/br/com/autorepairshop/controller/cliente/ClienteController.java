@@ -1,5 +1,6 @@
 package br.com.autorepairshop.controller.cliente;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +26,8 @@ import br.com.autorepairshop.controller.cliente.dto.ClienteResponse;
 import br.com.autorepairshop.controller.cliente.dto.CriarClienteRequest;
 import br.com.autorepairshop.controller.cliente.dto.ListarClientesRequest;
 import br.com.autorepairshop.controller.cliente.dto.ListarClientesResponse;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -69,14 +72,14 @@ public class ClienteController {
 	}
 
 	@PatchMapping("/{id}")
-	public ResponseEntity<?> alterar(@PathVariable String id, @Valid @RequestBody AlterarClienteRequest request) {
+	public ResponseEntity<?> alterar(@Parameter(description = "ID", example = "11111111-1111-1111-1111-000000000001") @PathVariable String id, @Valid @RequestBody AlterarClienteRequest request) {
 		var input = request.toInput(id);
 		alterarCliente.executar(input);
 		return ResponseEntity.noContent().build();
 	}
 
 	@GetMapping
-	public ResponseEntity<ListarClientesResponse> listar(@ModelAttribute ListarClientesRequest request) {
+	public ResponseEntity<ListarClientesResponse> listar(@ParameterObject @ModelAttribute ListarClientesRequest request) {
 
 		var inputRequest = request.toInput();
 		var inputPaginacao = new PaginacaoInput(request.pagina(), request.tamanho());
@@ -86,21 +89,21 @@ public class ClienteController {
 	}
 
 	@GetMapping("/por-cpf-cnpj")
-	public ResponseEntity<ClienteResponse> buscarPorCpfCnpj(@RequestParam Short tipoPessoa,
-			@RequestParam String cpfCnpj) {
+	public ResponseEntity<ClienteResponse> buscarPorCpfCnpj(@Parameter(description = "1 = Pessoa física, 2 = Pessoa jurídica", example = "1") @RequestParam Short tipoPessoa,
+			@Parameter(description = "CPF ou CNPJ", example = "\"52998224725\"", schema = @Schema(type = "string")) @RequestParam String cpfCnpj) {
 
 		return buscarClientePorCpfCnpj.executar(tipoPessoa, cpfCnpj).map(ClienteResponse::toResponse)
 				.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> excluir(@PathVariable String id) {
+	public ResponseEntity<Void> excluir(@Parameter(description = "ID", example = "11111111-1111-1111-1111-000000000002") @PathVariable String id) {
 		desativarCliente.executar(id);
 		return ResponseEntity.noContent().build();
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<ClienteResponse> buscarClientePorId(@RequestParam String id) {
+	public ResponseEntity<ClienteResponse> buscarClientePorId(@Parameter(description = "ID", example = "11111111-1111-1111-1111-000000000001") @PathVariable String id) {
 		var output = this.buscarClientePorId.executar(id);
 		if(output.isPresent())
 		{

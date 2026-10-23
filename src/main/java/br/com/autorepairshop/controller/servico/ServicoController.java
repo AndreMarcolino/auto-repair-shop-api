@@ -1,5 +1,6 @@
 package br.com.autorepairshop.controller.servico;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.autorepairshop.application.servico.alterar.AlterarServicoUseCase;
@@ -25,6 +25,7 @@ import br.com.autorepairshop.controller.servico.dto.ListarServicosRequest;
 import br.com.autorepairshop.controller.servico.dto.ListarServicosResponse;
 import br.com.autorepairshop.controller.servico.dto.ServicoResponse;
 import br.com.autorepairshop.infrastructure.security.OpenApiSecurity;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -73,7 +74,7 @@ public class ServicoController {
     @PreAuthorize("hasRole(T(br.com.autorepairshop.infrastructure.security.Roles).ATENDENTE)")
     @PatchMapping("/{id}")
     public ResponseEntity<?> alterar(
-            @PathVariable String id,
+            @Parameter(description = "ID", example = "33333333-3333-3333-3333-000000000001") @PathVariable String id,
             @Valid @RequestBody AlterarServicoRequest request) {
 
         var input = request.toInput(id);
@@ -85,7 +86,7 @@ public class ServicoController {
     @PreAuthorize("hasAnyRole(T(br.com.autorepairshop.infrastructure.security.Roles).ATENDENTE, T(br.com.autorepairshop.infrastructure.security.Roles).MECANICO)")
     @GetMapping
     public ResponseEntity<ListarServicosResponse> listar(
-            @ModelAttribute ListarServicosRequest request
+            @ParameterObject @ModelAttribute ListarServicosRequest request
             
     ) {
         var inputRequest = request.toInput();
@@ -98,14 +99,14 @@ public class ServicoController {
     
     @PreAuthorize("hasRole(T(br.com.autorepairshop.infrastructure.security.Roles).ATENDENTE)")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluir(@PathVariable String id) {
+    public ResponseEntity<Void> excluir(@Parameter(description = "ID", example = "33333333-3333-3333-3333-000000000006") @PathVariable String id) {
         excluirServico.executar(id);
         return ResponseEntity.noContent().build();
     }
     
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole(T(br.com.autorepairshop.infrastructure.security.Roles).ATENDENTE, T(br.com.autorepairshop.infrastructure.security.Roles).MECANICO)")
-  	public ResponseEntity<ServicoResponse> buscarServicoPorId(@RequestParam String id) {
+  	public ResponseEntity<ServicoResponse> buscarServicoPorId(@Parameter(description = "ID", example = "33333333-3333-3333-3333-000000000001") @PathVariable String id) {
   		var output = this.buscarServicoPorId.executar(id);
   		if(output.isPresent())
   		{

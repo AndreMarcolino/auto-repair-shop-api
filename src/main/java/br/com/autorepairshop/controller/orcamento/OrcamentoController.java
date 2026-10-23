@@ -16,6 +16,7 @@ import br.com.autorepairshop.controller.orcamento.dto.AdicionarInsumoRequest;
 import br.com.autorepairshop.controller.orcamento.dto.AdicionarServicoRequest;
 import br.com.autorepairshop.controller.orcamento.dto.FinalizarOrcamentoRequest;
 import br.com.autorepairshop.infrastructure.security.OpenApiSecurity;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -42,7 +43,7 @@ public class OrcamentoController {
 
     @PostMapping("/adicionar-insumos")
     public ResponseEntity<?> adicionarInsumos(
-    		@PathVariable String id,
+    		@Parameter(description = "ID da ordem de serviço (OS em diagnóstico)", example = "55555555-5555-5555-5555-000000000002") @PathVariable String id,
             @RequestBody AdicionarInsumoRequest request,
             @AuthenticationPrincipal Jwt jwt) {
 
@@ -54,7 +55,7 @@ public class OrcamentoController {
     
     @PostMapping("/adicionar-servicos")
     public ResponseEntity<?> adicionarServicos(
-            @PathVariable String id,
+            @Parameter(description = "ID da ordem de serviço (OS em diagnóstico)", example = "55555555-5555-5555-5555-000000000002") @PathVariable String id,
             @RequestBody AdicionarServicoRequest request,
             @AuthenticationPrincipal Jwt jwt) {
 
@@ -66,7 +67,7 @@ public class OrcamentoController {
     
     @PostMapping("/finalizar")
     public ResponseEntity<Void> finalizarOrcamento(
-            @PathVariable String id,
+            @Parameter(description = "ID da ordem de serviço (OS em diagnóstico)", example = "55555555-5555-5555-5555-000000000002") @PathVariable String id,
             @RequestBody FinalizarOrcamentoRequest request) {
 
         var input = request.paraInput(id);

@@ -1,5 +1,6 @@
 package br.com.autorepairshop.controller.insumo;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.autorepairshop.application.insumo.alterar.AlterarInsumoUseCase;
@@ -24,6 +24,7 @@ import br.com.autorepairshop.controller.insumo.dto.CriarInsumoRequest;
 import br.com.autorepairshop.controller.insumo.dto.InsumoResponse;
 import br.com.autorepairshop.controller.insumo.dto.ListarInsumosRequest;
 import br.com.autorepairshop.controller.insumo.dto.ListarInsumosResponse;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -71,7 +72,7 @@ public class InsumoController {
     @PreAuthorize("hasRole(T(br.com.autorepairshop.infrastructure.security.Roles).ATENDENTE)")
     @PatchMapping("/{id}")
     public ResponseEntity<?> alterar(
-            @PathVariable String id,
+            @Parameter(description = "ID", example = "44444444-4444-4444-4444-000000000001") @PathVariable String id,
             @Valid @RequestBody AlterarInsumoRequest request) {
 
         var input = request.toInput(id);
@@ -82,7 +83,7 @@ public class InsumoController {
     @PreAuthorize("hasAnyRole(T(br.com.autorepairshop.infrastructure.security.Roles).ATENDENTE, T(br.com.autorepairshop.infrastructure.security.Roles).MECANICO)")
     @GetMapping
     public ResponseEntity<ListarInsumosResponse> listar(
-            @ModelAttribute ListarInsumosRequest request
+            @ParameterObject @ModelAttribute ListarInsumosRequest request
             
     ) {
         var inputRequest = request.toInput();
@@ -96,14 +97,14 @@ public class InsumoController {
     
     @PreAuthorize("hasRole(T(br.com.autorepairshop.infrastructure.security.Roles).ATENDENTE)")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluir(@PathVariable String id) {
+    public ResponseEntity<Void> excluir(@Parameter(description = "ID", example = "44444444-4444-4444-4444-000000000006") @PathVariable String id) {
         excluirInsumo.executar(id);
         return ResponseEntity.noContent().build();
     }
     
     @PreAuthorize("hasAnyRole(T(br.com.autorepairshop.infrastructure.security.Roles).ATENDENTE, T(br.com.autorepairshop.infrastructure.security.Roles).MECANICO)")
     @GetMapping("/{id}")
-	public ResponseEntity<InsumoResponse> buscarInsumoPorId(@RequestParam String id) {
+	public ResponseEntity<InsumoResponse> buscarInsumoPorId(@Parameter(description = "ID", example = "44444444-4444-4444-4444-000000000001") @PathVariable String id) {
 		var output = this.buscarInsumoPorId.executar(id);
 		if(output.isPresent())
 		{
