@@ -1,404 +1,297 @@
 # Auto Repair Shop API
 
-Back-end para gestão de uma oficina mecânica, desenvolvido como MVP do Tech Challenge da Fase 1 do curso SOAT — Software Architecture.
+Back-end monolítico para gestão de oficina mecânica, desenvolvido como MVP do Tech Challenge da Fase 1 do curso **SOAT — Software Architecture**.
 
-## Objetivo
+## Objetivo e solução
 
-Centralizar a gestão de clientes, veículos, serviços, peças, insumos e ordens de serviço, reduzindo a dependência de controles manuais e facilitando o acompanhamento dos atendimentos.
+Centralizar clientes, veículos, serviços, peças/insumos, estoque e ordens de serviço (OS), substituindo controles manuais por uma API REST.
 
-## Descrição da solução
+A implementação identificada contempla cadastro administrativo, abertura e acompanhamento de OS, elaboração e decisão de orçamento, movimentação de estoque, pagamento, entrega, consulta pelo cliente e cálculo de tempos médios. Peças são representadas pelo modelo de insumos.
 
-A solução disponibiliza uma API REST para apoiar os processos administrativos e operacionais da oficina.
-
-O escopo previsto contempla:
-
-- Cadastro e gestão de clientes e veículos.
-- Cadastro de serviços, peças e insumos.
-- Controle de estoque.
-- Criação e acompanhamento de ordens de serviço.
-- Geração de orçamento com base nos serviços e materiais utilizados.
-- Aprovação ou rejeição do orçamento.
-- Controle das transições de status da ordem de serviço.
-- Consulta do andamento da ordem de serviço pelo cliente.
-- Cálculo do tempo médio de execução dos serviços.
-- Autenticação JWT para as APIs administrativas.
-
-A implementação e a validação de cada fluxo devem ser conferidas no código e nos testes. A inicialização da aplicação, por si só, não comprova o funcionamento de todas as funcionalidades.
+**Status:** essas funcionalidades foram identificadas por análise estática; a validação funcional completa da versão atual ainda está pendente. Consulte a seção “Status da validação”.
 
 ## Arquitetura
 
-A aplicação utiliza uma arquitetura monolítica com Spring Boot.
+Monólito em camadas, com características de portas e adaptadores, organizado no pacote `br.com.autorepairshop`.
 
-A organização em camadas e os elementos de Domain-Driven Design (DDD) deverão ser detalhados conforme a estrutura efetivamente implementada no código.
+| Camada | Responsabilidade |
+|---|---|
+| `controller` | Endpoints REST, DTOs e validação HTTP |
+| `application` | Casos de uso, coordenação de operações e transações |
+| `domain` | Entidades, agregados, objetos de valor, regras e contratos de repositório |
+| `infrastructure` | Persistência JPA, adaptadores, segurança, eventos e OpenAPI |
 
-Componentes técnicos confirmados:
+Fluxo: **Controller → caso de uso → domínio/repositórios → adaptadores → PostgreSQL**.
 
-- Spring Web para exposição da API HTTP.
-- Spring Data JPA para persistência.
-- PostgreSQL como banco de dados.
-- Flyway para controle das migrações.
-- Spring Security e bibliotecas OAuth2 Resource Server/JOSE para suporte à segurança.
-- Springdoc para documentação OpenAPI e Swagger UI.
+Os modelos de domínio são separados das entidades JPA. A aplicação utiliza recursos Spring e algumas dependências diretas da infraestrutura; portanto, a separação de portas e adaptadores não é estrita.
 
-O ambiente Docker possui dois serviços:
-
-- `api`: aplicação Java, construída pelo `Dockerfile`.
-- `postgres`: banco de dados PostgreSQL.
-
-A API acessa o banco pela rede interna do Compose, utilizando o endereço `postgres:5432`.
+Os serviços utilizam `@Transactional`. Os eventos internos `EntradaEstoqueRegistrada` e `OrdemServicoFinalizada` são tratados após commit, sem comprovação de mensageria externa ou entrega durável. A persistência desses fluxos e o comportamento concorrente ainda precisam de testes.
 
 ## Tecnologias
 
-| Tecnologia | Utilização |
-|---|---|
-| Java 25 | Linguagem e ambiente de execução |
-| Spring Boot 4.1.1 | Framework da aplicação |
-| Maven e Maven Wrapper | Gerenciamento de dependências e build |
-| Spring Web | API REST |
-| Spring Data JPA | Persistência |
-| PostgreSQL 17 | Banco de dados |
-| Flyway | Migrações do banco |
-| Bean Validation | Infraestrutura de validação |
-| Spring Security | Infraestrutura de segurança |
-| OAuth2 Resource Server e JOSE | Suporte a JWT |
-| Springdoc OpenAPI 3.0.0 | Documentação da API |
-| Docker e Docker Compose | Build e execução do ambiente |
-| Spring Boot Test | Infraestrutura de testes |
+Java 25, Spring Boot 4.1.1, Maven Wrapper, Spring Web, Spring Data JPA, PostgreSQL 17, Flyway, Bean Validation, Spring Security, OAuth2 Resource Server/JOSE, Springdoc OpenAPI 3.0.0, Docker e Docker Compose.
 
-O projeto também declara dependências de Testcontainers para PostgreSQL em escopo de teste. Seu uso efetivo nos testes ainda deve ser verificado.
+Para testes, o projeto declara Spring Boot Test e Testcontainers para PostgreSQL; o uso efetivo de Testcontainers ainda precisa ser confirmado.
 
 ## Pré-requisitos
 
-### Execução do ambiente completo pelo Docker
+| Modalidade | Requisitos |
+|---|---|
+| Ambiente completo pelo Docker | Docker em execução, Docker Compose e portas 8080/5432 disponíveis |
+| API pelo Maven | JDK 25, Maven Wrapper incluído, PostgreSQL pelo Docker e portas 8080/5432 disponíveis |
 
-- Docker instalado e em execução.
-- Docker Compose disponível.
-- Git, caso seja necessário clonar o repositório.
-- Portas `8080` e `5432` disponíveis.
+Java e Maven locais não são necessários para executar o ambiente completo pelo Docker.
 
-Nesta modalidade, não é necessário instalar Java ou Maven na máquina.
+## Configuração
 
-### Execução da API pelo Maven
+Execute os comandos na raiz do projeto. Crie `.env` a partir de `.env.example`, após confirmar que esse arquivo está disponível.
 
-- JDK 25.
-- Docker com Compose para executar o PostgreSQL.
-- Portas `8080` e `5432` disponíveis.
-
-O Maven Wrapper está incluído no projeto, dispensando a instalação separada do Maven.
-
-## Configuração do ambiente
-
-Na raiz do projeto, crie um arquivo `.env` a partir de `.env.example`.
-
-### Windows — PowerShell
+Windows — PowerShell:
 
     Copy-Item .env.example .env
 
-### Linux ou macOS
+Linux/macOS:
 
     cp .env.example .env
 
-Preencha as variáveis:
+Configure `DB_PASSWORD` conforme o banco local. A aplicação também permite `DB_URL` e `DB_USERNAME`.
 
-| Variável | Descrição |
-|---|---|
-| `DB_PASSWORD` | Senha do PostgreSQL |
-| `JWT_SECRET` | Segredo utilizado pela configuração JWT |
+**JWT:** confirme como o segredo é lido pela configuração e repassado pelo Compose. `JWT_SECRET` só terá efeito se a aplicação utilizar essa variável. Para HS256 com decodificação Base64, são necessários pelo menos 32 bytes após a decodificação.
 
-O formato e o tamanho de `JWT_SECRET` devem ser compatíveis com a implementação de segurança da aplicação.
+Não versione `.env`, segredos, tokens ou credenciais reais. Alterar `DB_PASSWORD` não modifica a senha de um banco já persistido no volume.
 
-**Não versione o arquivo `.env` nem publique segredos, tokens ou credenciais reais.**
+### Perfil local
 
-O `.env.example` deve conter somente valores ilustrativos ou marcadores de preenchimento.
+O perfil padrão é `local`, que configura o Flyway com `db/migration` e `db/seed`.
 
-> Se o banco já tiver sido criado, mantenha a senha utilizada na sua inicialização. Alterar `DB_PASSWORD` não altera automaticamente a senha de um banco existente no volume.
+`R__dados_fake.sql` fornece dados de demonstração. É uma migração repetível, reexecutada quando seu checksum muda; os inserts com `ON CONFLICT DO NOTHING` não restauram registros alterados.
+
+Fora da demonstração local, configure explicitamente o perfil e confira as localizações efetivas do Flyway. As contas de funcionários da V17 pertencem às migrações versionadas, não apenas ao seed local.
 
 ## Execução com Docker Compose
 
-Execute os comandos na raiz do projeto.
-
-### 1. Validar a configuração
+Validar, construir e iniciar:
 
     docker compose config --quiet
-
-Se o comando terminar sem mensagens de erro, a configuração foi validada.
-
-### 2. Construir e iniciar o ambiente
-
     docker compose up -d --build
-
-O Compose inicia o PostgreSQL, aguarda o banco ficar saudável e inicia a API.
-
-Durante a inicialização, o Flyway valida as migrações existentes e aplica as pendentes.
-
-### 3. Verificar os serviços
-
     docker compose ps
 
-### 4. Acompanhar os logs
-
-API:
+Acompanhar os logs:
 
     docker compose logs -f api
-
-Banco de dados:
-
     docker compose logs -f postgres
 
-A mensagem `Started AutoRepairShopApiApplication` indica que a inicialização da aplicação foi concluída.
+O Flyway aplica as migrações pendentes. A mensagem `Started AutoRepairShopApiApplication` indica inicialização, não validação dos fluxos.
 
-Pressione `Ctrl+C` para sair do acompanhamento dos logs sem encerrar os contêineres.
-
-### 5. Encerrar o ambiente
+Encerrar preservando o banco:
 
     docker compose down
 
-Esse comando preserva o volume do PostgreSQL.
-
-**Atenção:** o comando abaixo também remove o volume e apaga os dados do banco:
-
-    docker compose down -v
+**Atenção:** `docker compose down -v` remove volumes e pode apagar os dados. Use `Ctrl+C` para sair dos logs sem encerrar os serviços.
 
 ## Execução da API pelo Maven
 
-Nesta modalidade, somente o PostgreSQL é executado pelo Docker.
-
-Não mantenha a API do Compose rodando na porta `8080` ao iniciar a aplicação pelo Maven.
-
-### 1. Iniciar o banco
+Não mantenha a API do Compose ocupando a porta 8080. Inicie somente o banco:
 
     docker compose up -d postgres
-
-Verifique se o banco está saudável:
-
     docker compose ps
 
-Como o arquivo Compose exige variáveis de ambiente, o `.env` deve estar preenchido mesmo ao iniciar somente o banco.
-
-### 2. Configurar o segredo JWT no terminal
-
-O Docker Compose lê o `.env` automaticamente, mas a execução pelo Maven não o carrega automaticamente.
+O Maven não carrega automaticamente o `.env`. Defina as variáveis necessárias no terminal.
 
 Windows — PowerShell:
 
-    $env:JWT_SECRET = "SUBSTITUA_PELO_SEGREDO_LOCAL"
-
-Linux ou macOS:
-
-    export JWT_SECRET='SUBSTITUA_PELO_SEGREDO_LOCAL'
-
-Caso a senha do banco seja diferente do padrão de desenvolvimento configurado na aplicação, defina também `DB_PASSWORD` no ambiente do terminal.
-
-### 3. Iniciar a aplicação
-
-Windows — PowerShell:
-
+    $env:DB_PASSWORD = "SUBSTITUA_PELA_SENHA_LOCAL"
+    $env:JWT_SECRET = "SUBSTITUA_PELO_SEGREDO_COMPATIVEL"
     .\mvnw.cmd spring-boot:run
 
-Linux ou macOS:
+Linux/macOS:
 
+    export DB_PASSWORD='SUBSTITUA_PELA_SENHA_LOCAL'
+    export JWT_SECRET='SUBSTITUA_PELO_SEGREDO_COMPATIVEL'
     chmod +x mvnw
     ./mvnw spring-boot:run
 
-O Maven Wrapper baixa as dependências necessárias, compila o código e inicia a aplicação.
-
-Mantenha o terminal aberto enquanto utilizar a API. Para encerrá-la, pressione `Ctrl+C`.
+Confirme a integração de `JWT_SECRET` com a configuração antes de utilizá-la. Mantenha o terminal aberto e use `Ctrl+C` para encerrar.
 
 ## Documentação da API
 
-Com a aplicação em execução, acesse:
+Com a aplicação em execução:
 
-- [Swagger UI](http://localhost:8080/swagger-ui.html)
-- [Especificação OpenAPI](http://localhost:8080/v3/api-docs)
+- <a href="http://localhost:8080/swagger-ui.html" target="_blank" style="text-decoration: underline;">Swagger UI</a>
+- <a href="http://localhost:8080/v3/api-docs" target="_blank" style="text-decoration: underline;">OpenAPI</a>
 
-A abertura do Swagger foi validada no ambiente local executado pelo Docker.
+O esquema Bearer é denominado `bearerAuth`. As anotações OpenAPI documentam a segurança; a proteção efetiva depende do Spring Security e dos casos de uso.
 
-As exigências de autenticação de cada endpoint devem ser verificadas na configuração de segurança e na documentação da API.
+### Principais recursos
+
+| Recurso | Caminho |
+|---|---|
+| Clientes e consulta por documento | `/api/clientes` e `/api/clientes/por-cpf-cnpj` |
+| Veículos, serviços e insumos | `/api/veiculos`, `/api/servicos`, `/api/insumos` |
+| Entrada de estoque | `/api/estoque/entrada` |
+| Abertura, listagem e detalhamento de OS | `/api/ordens-servico` |
+| Orçamento | `/api/ordens-servico/{id}/orcamento` |
+| Consulta do cliente | `/api/ordens-servico/cliente/detalhamento` |
+| Aprovação/reprovação | `/api/ordens-servico/aprovar` e `/api/ordens-servico/reprovar` |
+| Tempos médios | `/api/ordens-servico/tempo-medio-execucao` |
+
+Consulte métodos, DTOs e parâmetros completos no Swagger.
+
+A abertura retorna número público no formato `OS-AAAA-NNNNNN` e código de acesso; seu hash é persistido. O UUID permanece nas operações administrativas.
+
+A consulta pública utiliza `numeroOrdemServico`, `codigoVerificacao` e `cpfCnpj`. Aprovação e reprovação recebem esses campos em JSON.
+
+As médias consideram ordens entregues: atendimento corresponde a abertura–entrega e execução a início–fim do serviço. Datas insuficientes são excluídas da média correspondente; sem amostras, o resultado é zero. O indicador é calculado por OS, não por item de serviço.
 
 ## Banco de dados
 
-A aplicação utiliza PostgreSQL 17.
+**PostgreSQL 17**, escolhido pela integridade referencial, transações, restrições de consistência e consultas relacionais adequadas ao domínio, além da integração com JPA e Flyway.
 
-### Configuração
+- Banco: `auto_repair_shop`; serviço Compose: `postgres`; volume: `postgres_data`.
+- Maven: `jdbc:postgresql://localhost:5432/auto_repair_shop`.
+- Compose: `jdbc:postgresql://postgres:5432/auto_repair_shop`.
+- Migrações: `src/main/resources/db/migration/`.
+- Hibernate: `spring.jpa.hibernate.ddl-auto=none`.
 
-- Banco: `auto_repair_shop`.
-- Serviço no Compose: `postgres`.
-- Porta publicada na máquina: `5432`.
-- Persistência dos dados: volume `postgres_data`.
+A revisão identificou migrações até V27, que adiciona número público, hash do código e sequência. A validação local anterior confirmou V26; V27 e seed ainda precisam ser executados na versão atual.
 
-Na execução local pelo Maven, a conexão padrão aponta para:
+A V27 não preenche os novos campos de ordens anteriores. Seu tratamento deve ser definido antes de utilizar essas ordens nos novos fluxos.
 
-    jdbc:postgresql://localhost:5432/auto_repair_shop
+## Autenticação
 
-Dentro do Compose, a API utiliza:
+Funcionários ativos autenticam por e-mail e senha BCrypt. A aplicação emite JWT HS256, com identidade em `sub` e papel em `tipo`, convertido para autoridade `ROLE_`.
 
-    jdbc:postgresql://postgres:5432/auto_repair_shop
+### Contas de demonstração
 
-A configuração da aplicação permite utilizar:
+| E-mail | Papel |
+|---|---|
+| `atendente@auto-repair-shop.com.br` | ATENDENTE |
+| `mecanico@auto-repair-shop.com.br` | MECANICO |
 
-- `DB_URL`
-- `DB_USERNAME`
-- `DB_PASSWORD`
+Inseridas pela V17. A senha indicada no código auxiliar é `123456`; sua correspondência com os hashes ainda precisa ser validada. Essas contas são exclusivas de demonstração, nunca de produção.
 
-### Migrações
+### Login e uso do token
 
-As migrações ficam em:
+Na versão revisada, o login utiliza `GET /api/autenticacao/login` com corpo JSON:
 
-    src/main/resources/db/migration/
+    {
+      "email": "atendente@auto-repair-shop.com.br",
+      "senha": "123456"
+    }
 
-O gerenciamento do esquema é realizado pelo Flyway. A geração automática de tabelas pelo Hibernate está desabilitada com `spring.jpa.hibernate.ddl-auto=none`.
+Envie pelo Postman: método GET, corpo raw/JSON e cabeçalho `Content-Type: application/json`. GET com corpo pode não funcionar no Swagger ou em clientes de navegador; a alteração para POST ainda está pendente.
 
-Na validação local realizada, o Flyway confirmou 26 migrações e o esquema na versão `v26`.
+A resposta contém `accessToken`, `tokenType` e `expiresIn`. No Swagger, selecione `Authorize` e cole somente o token em `bearerAuth`.
 
-### Justificativa da escolha
+Cabeçalho esperado:
 
-O PostgreSQL oferece recursos adequados a um domínio com relacionamentos entre clientes, veículos, ordens de serviço, serviços e materiais:
+    Authorization: Bearer <token>
 
-- Integridade referencial.
-- Transações para operações relacionadas.
-- Restrições de consistência.
-- Consultas relacionais e agregações.
-- Integração com Spring Data JPA e Flyway.
+### Permissões
 
-**Pendente:** confirmar essa justificativa com o grupo e registrar eventuais critérios ou alternativas considerados na decisão.
+- **ATENDENTE:** clientes, veículos, escrita de serviços/insumos, entrada de estoque, abertura, pagamento, entrega e tempos médios.
+- **MECANICO:** diagnóstico, início e finalização de serviço.
+- **Ambos:** leitura de serviços/insumos e listagem de OS.
+- **Autenticação global sem papel explícito:** detalhamento administrativo e operações de orçamento.
+- **Sem JWT:** login, consulta do cliente, aprovação/reprovação e geradores auxiliares de token.
 
-## Autenticação e segurança
+A identidade nas inclusões de orçamento passou a ser obtida do JWT. As permissões e verificações adicionais precisam de validação funcional.
 
-O projeto possui dependências e configuração de suporte a JWT.
+## Testes e cobertura
 
-O segredo deve ser fornecido por variável de ambiente, sem permanecer fixo no código ou ser publicado no repositório.
-
-Antes da entrega, esta seção deverá ser complementada com:
-
-- Endpoint de autenticação e exemplo de requisição.
-- Procedimento para criar ou obter um usuário de demonstração.
-- Exemplo de resposta com o token.
-- Instruções para utilizar `Authorization: Bearer <token>`.
-- Identificação das rotas administrativas protegidas.
-- Forma de acesso do cliente à consulta da ordem de serviço.
-
-Não utilize credenciais reais como credenciais de demonstração.
-
-## Testes
-
-### Executar os testes
-
-Windows — PowerShell:
+Windows:
 
     .\mvnw.cmd test
 
-Linux ou macOS:
+Linux/macOS:
 
     ./mvnw test
 
-Os requisitos de infraestrutura dos testes devem ser confirmados conforme a implementação. Caso utilizem Testcontainers, o Docker deverá estar em execução.
+Confirme a configuração de banco e variáveis exigidas pelos testes. Se utilizarem Testcontainers, o Docker deverá estar em execução.
 
-### Cobertura
+Foi identificado `AutoRepairShopApiApplicationTests`, anteriormente revisado como teste de carregamento do contexto. Isso não comprova os principais fluxos nem execução bem-sucedida.
 
-A atividade exige cobertura mínima de 80% nos domínios críticos, além de testes unitários e de integração dos principais fluxos.
+**Pendente:** confirmar testes unitários/integração, requisitos de execução, ferramenta, comando e localização do relatório de cobertura. Não há evidência apresentada de cobertura mínima de 80%.
 
-**Pendências:**
+Domínios críticos propostos: transições de OS, orçamento, estoque, CPF/CNPJ e placa, autenticação/autorização, código de acesso e coordenação transacional.
 
-- Confirmar os testes implementados.
-- Identificar os domínios críticos.
-- Configurar ou confirmar a ferramenta de cobertura.
-- Documentar o comando de geração do relatório.
-- Disponibilizar a evidência da cobertura obtida.
+O build Docker utiliza `-DskipTests`; construir a imagem não comprova aprovação dos testes.
 
-O build da imagem Docker utiliza `-DskipTests`. Portanto, construir a imagem com sucesso não significa que os testes foram executados ou aprovados.
-
-## Estrutura dos principais diretórios
-
-Estrutura conhecida e arquivos de infraestrutura:
+## Estrutura do projeto
 
     .
-    ├── .mvn/                   # Configuração do Maven Wrapper
-    ├── src/
-    │   ├── main/               # Código e recursos da aplicação
-    │   │   └── resources/
-    │   │       └── db/
-    │   │           └── migration/
-    │   └── test/               # Código de testes
-    ├── Dockerfile              # Build e execução da API
-    ├── docker-compose.yml      # API e PostgreSQL
-    ├── pom.xml                 # Dependências e build
-    ├── mvnw                    # Maven Wrapper para Linux/macOS
-    ├── mvnw.cmd                # Maven Wrapper para Windows
+    ├── .mvn/                         # Maven Wrapper
+    ├── src/main/java/br/com/autorepairshop/
+    │   ├── controller/               # HTTP e DTOs
+    │   ├── application/              # Casos de uso
+    │   ├── domain/                   # Modelos e regras
+    │   └── infrastructure/           # JPA, segurança, eventos e config
+    ├── src/main/resources/
+    │   ├── application.properties
+    │   ├── application-local.properties
+    │   └── db/
+    │       ├── migration/            # Migrações Flyway
+    │       └── seed/                 # Dados de demonstração
+    ├── src/test/                     # Testes
+    ├── zap-report/zap-report.html    # Relatório de scan
+    ├── Dockerfile
+    ├── docker-compose.yml
+    ├── pom.xml
+    ├── mvnw
+    ├── mvnw.cmd
     └── README.md
-
-Os arquivos `.env.example`, `.dockerignore` e as regras de exclusão do `.env` devem ser conferidos antes da entrega.
-
-A estrutura detalhada dos pacotes e das camadas ainda deverá ser documentada com base no código.
 
 ## Documentação DDD
 
-A documentação deverá representar a implementação entregue e incluir:
+<a href="https://miro.com/app/board/uXjVHqZ6t4s=/" target="_blank" style="text-decoration: underline;">Documentação DDD no Miro</a>
 
-- Event Storming dos fluxos principais.
-- Eventos de domínio, comandos, atores e políticas.
-- Agregados, entidades e objetos de valor.
-- Bounded Contexts, quando identificados.
-- Diagramas da solução.
-- Linguagem ubíqua e glossário.
-- Relação entre os elementos de DDD e o código.
+A modelagem deve representar a versão entregue e incluir Event Storming de criação/acompanhamento da OS e gestão de peças/insumos, atores, comandos, eventos, políticas, agregados, entidades, objetos de valor, diagramas, linguagem ubíqua e glossário. Bounded Contexts devem ser apresentados quando identificados.
 
-Estrutura prevista:
+No código, foram identificados modelos como `OrdemServico`, `Orcamento`, `Cliente`, `Veiculo`, `Estoque` e `Funcionario`, além de objetos de valor para CPF/CNPJ, e-mail e placa.
 
-    docs/
-    └── ddd/
-        ├── event-storming.pdf
-        ├── diagramas.pdf
-        └── linguagem-ubiqua.md
-
-**Link da documentação DDD:** pendente.
-
-A documentação externa deverá permitir acesso sem solicitação manual de permissão. As exportações também deverão ser armazenadas no repositório.
+**Pendente:** confirmar acesso sem solicitação de permissão e exportações no repositório, preferencialmente em `docs/ddd/`. Eventos conceituais da modelagem devem ser distinguidos dos eventos realmente publicados pela aplicação.
 
 ## Análise de vulnerabilidades
 
-**Pendente:** executar a análise de vulnerabilidades e disponibilizar o relatório ou resultado no repositório.
+Relatório versionado: `zap-report/zap-report.html`, incluído em `a86ac6b`.
 
-Documentar a ferramenta utilizada, o comando executado, os resultados e o tratamento dos problemas identificados.
+**Pendente:** revisar conteúdo e registrar ferramenta/versão, data, procedimento, alvo, autenticação, commit analisado, alertas e tratamento. A existência do arquivo não comprova ausência de vulnerabilidades nem cobertura de todas as rotas.
+
+## Status da validação e limitações
+
+Referência da revisão estática: branch `develop`, commit `a86ac6bfed741c8a66d97516234bf674c9809191`.
+
+| Situação | Evidência |
+|---|---|
+| Validado em versão anterior | API por Maven/Docker, PostgreSQL, conexão Compose, Flyway até V26, HTTP 8080 e Swagger |
+| Identificado no código atual | CRUDs, estoque, OS, orçamento, consulta do cliente, médias, JWT, V27 e seed |
+| Correções identificadas, sem regressão executada | Uso de `@PathVariable`, preenchimento de `dataEntrega` e identidade JWT no orçamento |
+| Ainda não comprovado | Fluxos completos da versão atual, autorização, V27/seed, transações, concorrência, testes e cobertura |
+
+As principais pendências técnicas registradas na revisão são:
+
+- Login GET com corpo e geradores públicos de token.
+- Comparação do código de acesso na reprovação não evidenciada.
+- Tratamento incorreto de CNPJ e validação do número da OS nos fluxos do cliente.
+- Construção direta de objetos de valor, contornando as fábricas de validação.
+- Possível acesso a estoque nulo na aprovação e necessidade de proteger quantidades no caso de uso.
+- Persistência após commit, consistência de datas do seed e durações negativas.
+- Permissões, expiração/validação JWT, revogação e proteção contra tentativas repetidas.
+- Tratamento de ordens anteriores à V27, paginação e critérios de ordenação.
+
+Esses apontamentos devem ser reavaliados na versão final e acompanhados de testes. Atualizar o README não aplica correções ao código.
 
 ## Vídeo da entrega
 
-**Link do vídeo público no YouTube:** pendente.
+Link público no YouTube: **pendente**.
 
-O vídeo deverá corresponder à versão final entregue, ter duração máxima de 15 minutos e demonstrar a solução, a arquitetura, os fluxos principais, a segurança, os testes e a análise de vulnerabilidades.
+Duração máxima: **15 minutos**. O vídeo deve corresponder ao commit entregue, identificar os integrantes e demonstrar proposta, arquitetura, banco, DDD/Event Storming, execução, Swagger, fluxos da OS/orçamento, autenticação, testes e resultado da análise de vulnerabilidades.
 
-## Status da validação
+## Versão final e submissão
 
-### Validado localmente
+- Branch da entrega: **pendente**.
+- Hash completo do commit: **pendente**.
 
-- Inicialização do PostgreSQL pelo Docker Compose.
-- Execução da API pelo Maven Wrapper.
-- Build da imagem da aplicação pelo Dockerfile.
-- Execução conjunta da API e do banco pelo Docker Compose.
-- Conexão da API com o PostgreSQL pela rede do Compose.
-- Validação das 26 migrações pelo Flyway.
-- Inicialização HTTP na porta `8080`.
-- Abertura do Swagger UI.
+Informe branch e hash também no PDF de submissão. Código, documentação, relatórios e vídeo devem corresponder à mesma versão.
 
-### Ainda a verificar ou documentar
-
-- Funcionalidades e regras de negócio do MVP.
-- Transições de status das ordens de serviço.
-- Autenticação e autorização.
-- Validação de CPF/CNPJ e placa.
-- Testes unitários e de integração.
-- Cobertura mínima de 80% nos domínios críticos.
-- Tratamento de transações dos fluxos principais.
-- Estrutura das camadas e documentação DDD.
-- Relatório de vulnerabilidades.
-- Vídeo público da entrega.
-
-## Versão da entrega
-
-Preencher antes da submissão:
-
-- Branch da entrega: pendente.
-- Hash completo do commit: pendente.
-
-O código, a documentação e o vídeo devem corresponder à mesma versão.
-
-A branch `main` deve permanecer protegida, recebendo alterações por Pull Requests.
+Mantenha o repositório público durante a correção/revisão de notas, sem segredos ou informações sensíveis. A branch `main` deve permanecer protegida e receber alterações por Pull Requests.
