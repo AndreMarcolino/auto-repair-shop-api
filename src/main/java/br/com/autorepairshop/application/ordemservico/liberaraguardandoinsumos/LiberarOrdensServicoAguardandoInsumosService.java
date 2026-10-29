@@ -48,7 +48,7 @@ public class LiberarOrdensServicoAguardandoInsumosService
     @Override
     public void executar() {
         var ordens = ordemServicoRepository
-                .buscarPorStatus(StatusOrdemServico.AGUARDANDO_PECAS);
+                .buscarPorStatus(StatusOrdemServico.AGUARDANDO_INSUMOS);
 
         for (OrdemServico ordem : ordens) {
             UUID ordemServicoId = ordem.getId();
@@ -64,7 +64,7 @@ public class LiberarOrdensServicoAguardandoInsumosService
                 .orElse(null);
 
         if (ordemServico == null
-                || ordemServico.getStatus() != StatusOrdemServico.AGUARDANDO_PECAS) {
+                || ordemServico.getStatus() != StatusOrdemServico.AGUARDANDO_INSUMOS) {
             return;
         }
 

@@ -6,7 +6,7 @@ public enum StatusOrdemServico {
     EM_DIAGNOSTICO((short) 2),
     AGUARDANDO_APROVACAO((short) 3),
     APROVADA((short) 4),
-    AGUARDANDO_PECAS((short) 5),
+    AGUARDANDO_INSUMOS((short) 5),
     EM_EXECUCAO((short) 6),
     FINALIZADA((short) 7),
     AGUARDANDO_PAGAMENTO((short) 8),

@@ -162,7 +162,7 @@ public class OrdemServico {
                     DomainError.ORDEM_SERVICO_NAO_PODE_SER_APROVADA);
         }
 
-        this.status = StatusOrdemServico.AGUARDANDO_PECAS;
+        this.status = StatusOrdemServico.AGUARDANDO_INSUMOS;
     }
     
     public void rejeitar() {
@@ -209,7 +209,7 @@ public class OrdemServico {
     
    
     public void liberarAposReposicaoDePecas() {
-        if (this.status != StatusOrdemServico.AGUARDANDO_PECAS) {
+        if (this.status != StatusOrdemServico.AGUARDANDO_INSUMOS) {
             throw new DomainException(
                 DomainError.ORDEM_SERVICO_TEM_QUE_ESTAR_AGUARDANDO_PECAS
             );
