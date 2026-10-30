@@ -199,7 +199,11 @@ A identidade nas inclusões de orçamento passou a ser obtida do JWT. As permiss
 
 ## Testes e cobertura
 
-Windows:
+Os testes unitários ficam em `src/test/java` e utilizam JUnit 5 e Mockito para testar casos de uso de forma isolada. Os testes unitários descritos nesta seção não exigem a inicialização do contexto completo do Spring, PostgreSQL ou Docker.
+
+### Executar a suíte de testes
+
+Windows — PowerShell:
 
     .\mvnw.cmd test
 
@@ -207,13 +211,46 @@ Linux/macOS:
 
     ./mvnw test
 
-Confirme a configuração de banco e variáveis exigidas pelos testes. Se utilizarem Testcontainers, o Docker deverá estar em execução.
+### Executar uma classe específica
 
-Foi identificado `AutoRepairShopApiApplicationTests`, anteriormente revisado como teste de carregamento do contexto. Isso não comprova os principais fluxos nem execução bem-sucedida.
+Windows — PowerShell:
 
-**Pendente:** confirmar testes unitários/integração, requisitos de execução, ferramenta, comando e localização do relatório de cobertura. Não há evidência apresentada de cobertura mínima de 80%.
+    .\mvnw.cmd "-Dtest=AdicionarInsumoServiceTest" test
+    .\mvnw.cmd "-Dtest=DetalharOrdemServicoClienteServiceTest" test
 
-Domínios críticos propostos: transições de OS, orçamento, estoque, CPF/CNPJ e placa, autenticação/autorização, código de acesso e coordenação transacional.
+Linux/macOS:
+
+    ./mvnw "-Dtest=AdicionarInsumoServiceTest" test
+    ./mvnw "-Dtest=DetalharOrdemServicoClienteServiceTest" test
+
+### Cenários cobertos pelos testes ajustados
+
+`AdicionarInsumoServiceTest` cobre:
+
+- adição de insumo ao orçamento e salvamento do orçamento;
+- rejeição de ordem de serviço nula;
+- rejeição de lista de insumos vazia;
+- rejeição de usuário nulo;
+- rejeição de UUID inválido para OS ou insumo;
+- rejeição quando o insumo não é encontrado;
+- rejeição quando o orçamento não é encontrado.
+
+`DetalharOrdemServicoClienteServiceTest` cobre:
+
+- rejeição de documento nulo, em branco ou inválido;
+- rejeição de código de verificação nulo ou em branco;
+- rejeição quando o cliente não é encontrado;
+- retorno nulo quando a OS não é encontrada;
+- rejeição quando a OS pertence a outro cliente;
+- rejeição de código de acesso incorreto;
+- detalhamento da OS sem orçamento;
+- detalhamento da OS com orçamento sem itens.
+
+**Pendente:** confirmar que as classes atualizadas foram salvas e executar os comandos acima na versão final. A descrição dos cenários não comprova que os testes foram executados com sucesso.
+
+O projeto declara Testcontainers para PostgreSQL; confirme quais testes o utilizam e seus requisitos. Caso existam testes de integração que iniciem contêineres, o Docker deverá estar disponível para executá-los.
+
+**Cobertura:** não há evidência apresentada de cobertura mínima de 80%. Para verificar esse requisito, configure e execute uma ferramenta de cobertura, como JaCoCo, e registre a métrica adotada, o resultado e os domínios críticos avaliados. Domínios críticos propostos: transições de OS, orçamento, estoque, CPF/CNPJ e placa, autenticação/autorização, código de acesso e coordenação transacional.
 
 O build Docker utiliza `-DskipTests`; construir a imagem não comprova aprovação dos testes.
 
@@ -266,7 +303,7 @@ Referência da revisão estática: branch `develop`, commit `a86ac6bfed741c8a66d
 | Validado em versão anterior | API por Maven/Docker, PostgreSQL, conexão Compose, Flyway até V26, HTTP 8080 e Swagger |
 | Identificado no código atual | CRUDs, estoque, OS, orçamento, consulta do cliente, médias, JWT, V27 e seed |
 | Correções identificadas, sem regressão executada | Uso de `@PathVariable`, preenchimento de `dataEntrega` e identidade JWT no orçamento |
-| Ainda não comprovado | Fluxos completos da versão atual, autorização, V27/seed, transações, concorrência, testes e cobertura |
+| Ainda não comprovado | Fluxos completos da versão atual, autorização, V27/seed, transações, concorrência, execução dos testes e cobertura |
 
 As principais pendências técnicas registradas na revisão são:
 
