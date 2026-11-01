@@ -75,7 +75,7 @@ class FluxoOrdemServicoIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("Sem estoque: aprovação leva a AGUARDANDO_PECAS e a entrada de estoque libera a OS")
+    @DisplayName("Sem estoque: aprovação leva a AGUARDANDO_INSUMOS e a entrada de estoque libera a OS")
     void aprovacaoSemEstoqueAguardaPecasELiberaComEntrada() {
         String cpf = GeradorDados.cpfValido();
         OrdemAberta ordem = abrirOrdemServico(criarCliente(1, cpf), criarVeiculo());
@@ -88,7 +88,7 @@ class FluxoOrdemServicoIntegrationTest extends AbstractIntegrationTest {
         assertSucesso(finalizarOrcamento(ordem.id(), "Necessária troca de peças"), "Finalizar orçamento");
 
         assertSucesso(aprovar(ordem, cpf), "Aprovar orçamento");
-        assertThat(statusDa(ordem.id())).isEqualTo("AGUARDANDO_PECAS");
+        assertThat(statusDa(ordem.id())).isEqualTo("AGUARDANDO_INSUMOS");
 
         // Entrada de estoque publica evento que libera as OS que aguardavam peças
         assertSucesso(entradaEstoque(insumoId, 10), "Entrada de estoque");
