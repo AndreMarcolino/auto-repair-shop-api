@@ -89,7 +89,7 @@ class LiberarOrdensServicoAguardandoInsumosServiceTest {
 
         try (MockedStatic<HistoricoStatusOrdemServico> historicoStatic = mockStatic(HistoricoStatusOrdemServico.class)) {
 
-            historicoStatic.when(() -> HistoricoStatusOrdemServico.registrar(ORDEM_ID, StatusOrdemServico.AGUARDANDO_PECAS, StatusOrdemServico.AGUARDANDO_PECAS)).thenReturn(historico);
+            historicoStatic.when(() -> HistoricoStatusOrdemServico.registrar(ORDEM_ID, StatusOrdemServico.AGUARDANDO_INSUMOS, StatusOrdemServico.AGUARDANDO_INSUMOS)).thenReturn(historico);
 
             service.executar();
 
@@ -102,7 +102,7 @@ class LiberarOrdensServicoAguardandoInsumosServiceTest {
             ordem.verify(pendenteRepository).excluirPorOrdemServicoId(ORDEM_ID);
             ordem.verify(historicoRepository).salvar(historico);
 
-            historicoStatic.verify(() -> HistoricoStatusOrdemServico.registrar(ORDEM_ID, StatusOrdemServico.AGUARDANDO_PECAS, StatusOrdemServico.AGUARDANDO_PECAS));
+            historicoStatic.verify(() -> HistoricoStatusOrdemServico.registrar(ORDEM_ID, StatusOrdemServico.AGUARDANDO_INSUMOS, StatusOrdemServico.AGUARDANDO_INSUMOS));
 
             verify(transactionManager).getTransaction(argThat(definition -> definition.getPropagationBehavior() == TransactionDefinition.PROPAGATION_REQUIRES_NEW));
             verify(transactionManager).commit(transactionStatus);
@@ -112,7 +112,7 @@ class LiberarOrdensServicoAguardandoInsumosServiceTest {
     @Test
     @DisplayName("Não deve processar a OS quando ela não for encontrada")
     void naoDeveProcessarOrdemNaoEncontrada() {
-        when(ordemServicoRepository.buscarPorStatus(StatusOrdemServico.AGUARDANDO_PECAS)).thenReturn(List.of(ordemServico));
+        when(ordemServicoRepository.buscarPorStatus(StatusOrdemServico.AGUARDANDO_INSUMOS)).thenReturn(List.of(ordemServico));
         when(ordemServico.getId()).thenReturn(ORDEM_ID);
         when(ordemServicoRepository.buscarPorId(ORDEM_ID)).thenReturn(Optional.empty());
 
@@ -125,7 +125,7 @@ class LiberarOrdensServicoAguardandoInsumosServiceTest {
     @Test
     @DisplayName("Não deve processar a OS se ela não estiver aguardando peças")
     void naoDeveProcessarOrdemComOutroStatus() {
-        when(ordemServicoRepository.buscarPorStatus(StatusOrdemServico.AGUARDANDO_PECAS)).thenReturn(List.of(ordemServico));
+        when(ordemServicoRepository.buscarPorStatus(StatusOrdemServico.AGUARDANDO_INSUMOS)).thenReturn(List.of(ordemServico));
         when(ordemServico.getId()).thenReturn(ORDEM_ID);
         when(ordemServicoRepository.buscarPorId(ORDEM_ID)).thenReturn(Optional.of(ordemServico));
         when(ordemServico.getStatus()).thenReturn(StatusOrdemServico.EM_EXECUCAO);
@@ -139,10 +139,10 @@ class LiberarOrdensServicoAguardandoInsumosServiceTest {
     @Test
     @DisplayName("Não deve liberar a OS se não houver pendências")
     void naoDeveLiberarOrdemSemPendencias() {
-        when(ordemServicoRepository.buscarPorStatus(StatusOrdemServico.AGUARDANDO_PECAS)).thenReturn(List.of(ordemServico));
+        when(ordemServicoRepository.buscarPorStatus(StatusOrdemServico.AGUARDANDO_INSUMOS)).thenReturn(List.of(ordemServico));
         when(ordemServico.getId()).thenReturn(ORDEM_ID);
         when(ordemServicoRepository.buscarPorId(ORDEM_ID)).thenReturn(Optional.of(ordemServico));
-        when(ordemServico.getStatus()).thenReturn(StatusOrdemServico.AGUARDANDO_PECAS);
+        when(ordemServico.getStatus()).thenReturn(StatusOrdemServico.AGUARDANDO_INSUMOS);
         when(pendenteRepository.buscarPorOrdemServicoId(ORDEM_ID)).thenReturn(List.of());
 
         service.executar();
@@ -188,10 +188,10 @@ class LiberarOrdensServicoAguardandoInsumosServiceTest {
     }
 
     private void configurarOrdemComPendencia() {
-        when(ordemServicoRepository.buscarPorStatus(StatusOrdemServico.AGUARDANDO_PECAS)).thenReturn(List.of(ordemServico));
+        when(ordemServicoRepository.buscarPorStatus(StatusOrdemServico.AGUARDANDO_INSUMOS)).thenReturn(List.of(ordemServico));
         when(ordemServico.getId()).thenReturn(ORDEM_ID);
         when(ordemServicoRepository.buscarPorId(ORDEM_ID)).thenReturn(Optional.of(ordemServico));
-        when(ordemServico.getStatus()).thenReturn(StatusOrdemServico.AGUARDANDO_PECAS);
+        when(ordemServico.getStatus()).thenReturn(StatusOrdemServico.AGUARDANDO_INSUMOS);
         when(pendenteRepository.buscarPorOrdemServicoId(ORDEM_ID)).thenReturn(List.of(pendencia));
     }
 }
