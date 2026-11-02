@@ -320,13 +320,13 @@ Esses apontamentos devem ser reavaliados na versão final e acompanhados de test
 
 ## Vídeo da entrega
 
-Link público no YouTube: **pendente**.
+Link público no YouTube: <a href="https://youtu.be/0gV4_J-2aWM">Vídeo Apresentação</a>
 
 Duração máxima: **15 minutos**. O vídeo deve corresponder ao commit entregue, identificar os integrantes e demonstrar proposta, arquitetura, banco, DDD/Event Storming, execução, Swagger, fluxos da OS/orçamento, autenticação, testes e resultado da análise de vulnerabilidades.
 
 ## Versão final e submissão
 
-- Branch da entrega: **pendente**.
+- Branch da entrega: <a href="https://github.com/AndreMarcolino/auto-repair-shop-api/tree/main">Branch main</a>
 - Hash completo do commit: **pendente**.
 
 Informe branch e hash também no PDF de submissão. Código, documentação, relatórios e vídeo devem corresponder à mesma versão.
