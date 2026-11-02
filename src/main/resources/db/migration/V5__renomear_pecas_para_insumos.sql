@@ -1,0 +1,1 @@
+ALTER TABLE pecas RENAME TO insumos;
